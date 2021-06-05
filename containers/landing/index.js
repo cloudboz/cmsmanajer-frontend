@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 import Navbar from "./components/Navbar";
-import { Main, Provider } from "./sections";
+import { Main, Provider, Feature, Invitation, About, Footer } from "./sections";
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -21,8 +21,12 @@ export default function Landing() {
     <>
       <Navbar />
       <Main />
+      {/* <img src="/amico.svg" className={classes.image} /> */}
       <Provider />
-      <img src="/amico.svg" className={classes.image} />
+      <Feature />
+      <Invitation />
+      <About />
+      <Footer />
     </>
   );
 }

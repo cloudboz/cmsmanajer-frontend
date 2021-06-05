@@ -4,15 +4,19 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   background: {
     background: `linear-gradient(270deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-    height: "100vh",
+    minHeight: "100vh",
   },
   container: {
     height: "100%",
+    alignContent: "center",
   },
   grid: {
-    height: "100%",
-    alignItems: "center",
+    minHeight: "100vh",
+    alignSelf: "center",
     color: "white",
+    alignContent: "center",
+    alignItem: "center",
+    paddingBlock: theme.spacing(15),
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -31,6 +35,19 @@ const useStyles = makeStyles((theme) => ({
     paddingInline: theme.spacing(6),
     paddingBlock: theme.spacing(2),
   },
+  image: {
+    display: "block",
+    position: "absolute",
+    right: 0,
+    height: "auto",
+    width: "45vw",
+    top: theme.spacing(13),
+  },
+  center: {
+    alignItems: "center",
+    alignSelf: "center",
+    alignContent: "center",
+  },
 }));
 
 export default function Main() {
@@ -40,7 +57,7 @@ export default function Main() {
     <Container maxWidth={false} className={classes.background}>
       <Container maxWidth="lg" className={classes.container}>
         <Grid container className={classes.grid}>
-          <Grid item xs={7}>
+          <Grid item md={7} className={classes.center}>
             <Typography variant="h2" className={classes.title}>
               A Simple Control Panel for Managing Cloud Server
             </Typography>
@@ -56,7 +73,9 @@ export default function Main() {
               GET STARTED
             </Button>
           </Grid>
-          <Grid item xs></Grid>
+          <Grid item md>
+            <img src="/amico.svg" className={classes.image} />
+          </Grid>
         </Grid>
       </Container>
     </Container>

@@ -51,6 +51,17 @@ const theme = createMuiTheme({
       containedSizeLarge: {
         padding: "10px 22px",
       },
+      outlinedSecondary: {
+        color: "white",
+        outlineColor: "white",
+        borderColor: "white",
+        borderWidth: 2,
+        "&:hover": {
+          borderWidth: 2,
+          borderColor: yellow.dark,
+          color: yellow.dark,
+        },
+      },
     },
   },
 });
