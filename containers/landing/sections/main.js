@@ -1,10 +1,17 @@
-import { Button, Container, Grid, Typography } from "@material-ui/core";
+import { Button, Container, Grid, Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+
+// import bg from "/bg.png";
 
 const useStyles = makeStyles((theme) => ({
   background: {
     background: `linear-gradient(270deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
     minHeight: "100vh",
+    backgroundImage: `/bg.png`,
+  },
+  backgroundImage: {
+    backgroundImage: `/bg.png`,
+    height: "100vh",
   },
   container: {
     height: "100%",
@@ -55,6 +62,7 @@ export default function Main() {
 
   return (
     <Container maxWidth={false} className={classes.background}>
+      {/* <Box className={classes.backgroundImage}> */}
       <Container maxWidth="lg" className={classes.container}>
         <Grid container className={classes.grid}>
           <Grid item md={7} className={classes.center}>
@@ -78,6 +86,7 @@ export default function Main() {
           </Grid>
         </Grid>
       </Container>
+      {/* </Box> */}
     </Container>
   );
 }

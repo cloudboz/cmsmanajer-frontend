@@ -8,7 +8,7 @@ export const yellow = {
   dark: "#E4991F",
 };
 export const common = {
-  black: "black",
-  white: "white",
+  black: "#000000",
+  white: "#FFFFFF",
   gray: "#F0F0F0",
 };

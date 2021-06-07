@@ -15,7 +15,7 @@ import poppins from "typeface-poppins";
 const theme = createMuiTheme({
   typography: {
     fontFamily: ["Poppins", "sans-serif"],
-    color: "#000",
+    color: "#000000",
   },
   palette: {
     primary: blue,
@@ -23,8 +23,8 @@ const theme = createMuiTheme({
     common,
   },
   props: {
-    MuiButtonBase: {
-      // disableElevation: true,
+    MuiButton: {
+      disableElevation: true,
     },
   },
   overrides: {
@@ -37,9 +37,11 @@ const theme = createMuiTheme({
       root: {
         textTransform: "none",
         fontWeight: 600,
+        borderRadius: "5px",
       },
       containedPrimary: {
         color: "black",
+        fontWeight: 500,
         backgroundColor: yellow.main,
         "&:hover": {
           backgroundColor: yellow.dark,
