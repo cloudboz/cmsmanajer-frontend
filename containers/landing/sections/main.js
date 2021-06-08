@@ -1,5 +1,6 @@
 import { Button, Container, Grid, Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Image from "next/image";
 
 // import bg from "/bg.png";
 
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     height: "100%",
     alignContent: "center",
+    zIndex: 1,
   },
   grid: {
     minHeight: "100vh",
@@ -62,6 +64,14 @@ export default function Main() {
 
   return (
     <Container maxWidth={false} className={classes.background}>
+      <Image
+        alt="Abstract"
+        src="/bg.png"
+        layout="fill"
+        objectFit="cover"
+        quality={100}
+        style={{ zIndex: 0 }}
+      />
       {/* <Box className={classes.backgroundImage}> */}
       <Container maxWidth="lg" className={classes.container}>
         <Grid container className={classes.grid}>
