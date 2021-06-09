@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy:
+  deployment:
     runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands using password
