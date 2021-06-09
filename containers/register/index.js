@@ -4,7 +4,7 @@ import Image from "next/image";
 import * as yup from "yup";
 // import bg from "/public/bg.png";
 
-import Form from "../../components/auth/form";
+import Form from "../../components/Auth/form";
 
 const useStyles = makeStyles((theme) => ({
   container: {

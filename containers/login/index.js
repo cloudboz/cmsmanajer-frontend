@@ -1,6 +1,6 @@
 import { Container, Typography, makeStyles } from "@material-ui/core";
 import * as yup from "yup";
-import Form from "../../components/auth/form";
+import Form from "../../components/Auth/form";
 import Image from "next/image";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     fontWeight: "bold",
-    marginBottom: theme.spacing(5),
+    marginBottom: theme.spacing(3),
   },
 }));
 
