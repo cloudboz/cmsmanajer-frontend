@@ -15,7 +15,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: 
+        script: |
           cd ~/cmsmanajer-app/cmsmanajer-frontend
           git pull origin main
           npm install
