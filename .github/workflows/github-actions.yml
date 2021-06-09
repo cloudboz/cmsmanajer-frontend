@@ -20,4 +20,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm i
       - run: npm run build
-      - run: pm2 restart ecosystem.config.js
+      - run: npm test
+      # - run: pm2 restart ecosystem.config.js
