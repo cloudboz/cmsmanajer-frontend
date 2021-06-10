@@ -16,6 +16,7 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: ["Poppins", "sans-serif"],
     color: "#000000",
+    fontWeightMedium: 600,
   },
   palette: {
     primary: blue,
@@ -31,6 +32,25 @@ const theme = createMuiTheme({
     MuiCssBaseline: {
       "@global": {
         "@font-face": [poppins],
+      },
+    },
+    MuiTabs: {
+      root: {
+        // marginTop: 5,
+        minHeight: "30px",
+        maxHeight: "40px",
+      },
+      flexContainer: {
+        alignSelf: "center",
+      },
+    },
+    MuiTab: {
+      root: {
+        width: "100px",
+        minWidth: "100px",
+        maxWidth: "120px",
+        minHeight: "30px",
+        maxHeight: "40px",
       },
     },
     MuiButton: {

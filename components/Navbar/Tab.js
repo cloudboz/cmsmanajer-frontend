@@ -1,28 +1,28 @@
-import { withStyles } from '@material-ui/core/styles';
-import { Tabs, Tab } from '@material-ui/core'
+import { withStyles } from "@material-ui/core/styles";
+import { Tabs, Tab } from "@material-ui/core";
 
-const StyledTabs = withStyles({
+const StyledTabs = withStyles((theme) => ({
   indicator: {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    '& > span': {
-      maxWidth: 40,
-      width: '100%',
-      backgroundColor: '#635ee7',
+    display: "flex",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    "& > span": {
+      maxWidth: "30%",
+      width: "100%",
+      backgroundColor: theme.palette.secondary.main,
     },
   },
-})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
-
+}))((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
 const StyledTab = withStyles((theme) => ({
   root: {
-    textTransform: 'none',
-    color: '#fff',
-    fontWeight: theme.typography.fontWeightRegular,
-    fontSize: theme.typography.pxToRem(15),
-    marginRight: theme.spacing(1),
-    '&:focus': {
+    textTransform: "none",
+    color: "#fff",
+    fontWeight: theme.typography.fontWeightMedium,
+    fontSize: theme.typography.pxToRem(14),
+    width: "100px",
+    minWidth: "100px",
+    "&:focus": {
       opacity: 1,
     },
   },
