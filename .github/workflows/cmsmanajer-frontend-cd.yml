@@ -15,4 +15,8 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd ~/cmsmanajer-app/cmsmanajer-frontend && exec bash && git pull origin main && npm install && npm run build && pm2 restart ecosystem.config.js
+        script: |
+          cd ~/cmsmanajer-app/cmsmanajer-frontend
+          ls -la
+          ls
+          ls -la
