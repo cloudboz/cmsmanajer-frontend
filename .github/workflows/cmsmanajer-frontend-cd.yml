@@ -17,6 +17,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ~/cmsmanajer-app/cmsmanajer-frontend
-          ls -la
-          ls
-          ls -la
+          git pull origin main
+          npm install
+          npm run build
+          
