@@ -25,7 +25,7 @@ export default function ListItem() {
 
   return (
     <Box style={{ display: "flex" }}>
-      <Box square variant="outlined" className={classes.item}>
+      <Box variant="outlined" className={classes.item}>
         <Box>
           <Typography>Example server</Typography>
           <Typography>123.123.123</Typography>
