@@ -61,7 +61,7 @@ const theme = createMuiTheme({
       },
       containedPrimary: {
         color: "black",
-        fontWeight: 500,
+        fontWeight: 400,
         backgroundColor: yellow.main,
         "&:hover": {
           backgroundColor: yellow.dark,

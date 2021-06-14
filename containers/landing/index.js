@@ -21,7 +21,7 @@ export default function Landing() {
     <>
       <Navbar />
       <Main />
-      {/* <img src="/amico.svg" className={classes.image} /> */}
+      {/* <img src="/servers.svg" className={classes.image} /> */}
       <Provider />
       <Feature />
       <Invitation />
