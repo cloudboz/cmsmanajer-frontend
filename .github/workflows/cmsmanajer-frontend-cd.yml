@@ -1,4 +1,4 @@
-name: CMS Manajer CD
+name: CMS Manajer Frontend CD
 
 on:
   push:
