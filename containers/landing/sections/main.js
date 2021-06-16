@@ -92,7 +92,7 @@ export default function Main() {
             </Button>
           </Grid>
           <Grid item md>
-            <img src="/amico.svg" className={classes.image} />
+            <img src="/servers.svg" className={classes.image} />
           </Grid>
         </Grid>
       </Container>
