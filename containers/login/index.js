@@ -3,23 +3,6 @@ import * as yup from "yup";
 import Form from "../../components/Auth/form";
 import Image from "next/image";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    height: "100vh",
-    backgroundColor: "white",
-    alignContent: "center",
-    alignItems: "center",
-    display: "flex",
-    // backgroundImage: `url(${bg})`,
-    // backgroundSize: "cover",
-    // backgroundPosition: "center",
-  },
-  logo: {
-    fontWeight: "bold",
-    marginBottom: theme.spacing(3),
-  },
-}));
-
 export default function Login() {
   const classes = useStyles();
 
@@ -33,6 +16,7 @@ export default function Login() {
     subtitle: "Don't have an account?",
     title2: "Register",
     button: "Login",
+    route: "/register",
   };
 
   const schema = yup.object({
@@ -59,3 +43,20 @@ export default function Login() {
     </Container>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    height: "100vh",
+    backgroundColor: "white",
+    alignContent: "center",
+    alignItems: "center",
+    display: "flex",
+    // backgroundImage: `url(${bg})`,
+    // backgroundSize: "cover",
+    // backgroundPosition: "center",
+  },
+  logo: {
+    fontWeight: "bold",
+    marginBottom: theme.spacing(3),
+  },
+}));

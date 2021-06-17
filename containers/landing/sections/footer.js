@@ -1,15 +1,5 @@
 import { Container, makeStyles, Typography } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  bg: {
-    backgroundColor: theme.palette.primary.dark,
-  },
-  container: {
-    paddingBlock: theme.spacing(2),
-    color: "white",
-  },
-}));
-
 export default function Footer() {
   const classes = useStyles();
 
@@ -23,3 +13,13 @@ export default function Footer() {
     </div>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  bg: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  container: {
+    paddingBlock: theme.spacing(2),
+    color: "white",
+  },
+}));

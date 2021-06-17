@@ -11,18 +11,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import ListIcon from "@material-ui/icons/List";
-
-const useStyles = makeStyles({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: "auto",
-  },
-});
+import { useRouter } from "next/router";
 
 export default function SwipeableTemporaryDrawer() {
   const classes = useStyles();
+  const router = useRouter();
   const [state, setState] = React.useState({
     top: false,
   });
@@ -39,6 +32,13 @@ export default function SwipeableTemporaryDrawer() {
     setState({ ...state, [anchor]: open });
   };
 
+  const listItems = [
+    { title: "ABOUT", route: "/about" },
+    { title: "PRICING", route: "/pricing" },
+    { title: "DOCUMENTATION", route: "/documentation" },
+    { title: "LOGIN", route: "/login" },
+  ];
+
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
@@ -49,25 +49,14 @@ export default function SwipeableTemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
+        {listItems.map((text, index) => (
+          <ListItem button key={index} onClick={() => router.push(text.route)}>
+            <ListItemText primary={text.title} />
           </ListItem>
         ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem button onClick={() => router.push("/register")}>
+          <ListItemText primary={"SIGN UP"} />
+        </ListItem>
       </List>
     </div>
   );
@@ -92,3 +81,12 @@ export default function SwipeableTemporaryDrawer() {
     </div>
   );
 }
+
+const useStyles = makeStyles({
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
+});

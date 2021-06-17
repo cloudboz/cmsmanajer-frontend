@@ -6,40 +6,6 @@ import * as yup from "yup";
 
 import Form from "../../components/Auth/form";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    height: "100vh",
-    backgroundColor: "white",
-    // backgroundImage: `url(${bg})`,
-    // backgroundSize: "cover",
-    // backgroundPosition: "center",
-  },
-  image: {
-    display: "block",
-    position: "absolute",
-    right: 0,
-    height: "auto",
-    width: "45vw",
-    top: theme.spacing(13),
-  },
-  blue: {
-    height: "100%",
-    backgroundColor: theme.palette.primary.main,
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
-    justifyItems: "center",
-    zIndex: 2,
-  },
-  bold: {
-    fontWeight: "bold",
-  },
-  logo: {
-    fontWeight: "bold",
-    marginBottom: theme.spacing(10),
-  },
-}));
-
 export default function Register() {
   const classes = useStyles();
 
@@ -56,6 +22,7 @@ export default function Register() {
     subtitle: "Already have an account?",
     title2: "Login",
     button: "Create Account",
+    route: "/login",
   };
 
   const schema = yup.object({
@@ -102,3 +69,34 @@ export default function Register() {
     </Grid>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    height: "100vh",
+    backgroundColor: "white",
+  },
+  image: {
+    display: "block",
+    position: "absolute",
+    right: 0,
+    height: "auto",
+    width: "45vw",
+    top: theme.spacing(13),
+  },
+  blue: {
+    height: "100%",
+    backgroundColor: theme.palette.primary.main,
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    justifyItems: "center",
+    zIndex: 2,
+  },
+  bold: {
+    fontWeight: "bold",
+  },
+  logo: {
+    fontWeight: "bold",
+    marginBottom: theme.spacing(10),
+  },
+}));

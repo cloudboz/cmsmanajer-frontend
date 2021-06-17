@@ -29,37 +29,43 @@ export default function Feature() {
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs>
           <Paper className={classes.item}>
-            <Typography variant="h6" paragraph>
-              Automate server configuration
+            <Typography variant="h6" paragraph className={classes.paper}>
+              Security
             </Typography>
             <Typography>
-              With just a few clicks of a button, server configuration is
-              automated with the best configuration (tailored by us, no less!)
-              to handle any traffic, saving you time and trouble.
+              Automate updates and firewalls, Secure architecture. We take away
+              the worry
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs>
           <Paper className={classes.item}>
-            <Typography variant="h6" paragraph>
-              Automate server configuration
+            <Typography variant="h6" paragraph className={classes.paper}>
+              Service Management
             </Typography>
             <Typography variant="body1">
-              With just a few clicks of a button, server configuration is
-              automated with the best configuration (tailored by us, no less!)
-              to handle any traffic, saving you time and trouble.
+              Manage and monitoring multiple server with one dashboard.
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs>
           <Paper className={classes.item}>
-            <Typography variant="h6" paragraph>
-              Automate server configuration
+            <Typography variant="h6" paragraph className={classes.paper}>
+              Server Optimization
             </Typography>
             <Typography>
-              With just a few clicks of a button, server configuration is
-              automated with the best configuration (tailored by us, no less!)
-              to handle any traffic, saving you time and trouble.
+              By default we update kernel configuration, create swap memory and
+              optimization performance
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs>
+          <Paper className={classes.item}>
+            <Typography variant="h6" paragraph className={classes.paper}>
+              One-Click Install
+            </Typography>
+            <Typography>
+              Support all your favourite application or CMS like wordpress
             </Typography>
           </Paper>
         </Grid>
@@ -75,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
   item: {
     paddingBlock: theme.spacing(3),
     paddingInline: theme.spacing(5),
+    height: 237,
   },
   grid: {
     justifyContent: "center",
@@ -85,5 +92,13 @@ const useStyles = makeStyles((theme) => ({
   },
   sub: {
     paddingInline: theme.spacing(12),
+    [theme.breakpoints.down("xs")]: {
+      paddingInline: theme.spacing(2),
+    },
+  },
+  paper: {
+    [theme.breakpoints.up("xl")]: {
+      fontSize: 24,
+    },
   },
 }));

@@ -10,28 +10,13 @@ import {
   Button,
 } from "@material-ui/core";
 import { Formik } from "formik";
+import { useRouter } from "next/router";
 
 import Input from "./input";
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  container: {
-    // width: "70%",
-    backgroundColor: "white",
-    alignSelf: "center",
-    padding: theme.spacing(4),
-    borderRadius: "10px",
-  },
-  bold: {
-    fontWeight: "bold",
-  },
-  form: {
-    marginBlock: "3px",
-  },
-}));
-
 export default function Form({ text, data, schema }) {
   const classes = useStyles();
+  const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
   const [initialValues, setInitialValues] = React.useState({});
 
@@ -61,7 +46,10 @@ export default function Form({ text, data, schema }) {
         {text.title}
       </Typography>
       <Typography variant="subtitle1" paragraph>
-        {text.subtitle} <span className={classes.bold}>{text.title2}</span>
+        {text.subtitle}{" "}
+        <span className={classes.bold} onClick={() => router.push(text.route)}>
+          {text.title2}
+        </span>
       </Typography>
       <Formik
         validationSchema={schema}
@@ -126,3 +114,21 @@ export default function Form({ text, data, schema }) {
     </Container>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  container: {
+    // width: "70%",
+    backgroundColor: "white",
+    alignSelf: "center",
+    padding: theme.spacing(4),
+    borderRadius: "10px",
+  },
+  bold: {
+    fontWeight: "bold",
+    cursor: "pointer",
+  },
+  form: {
+    marginBlock: "3px",
+  },
+}));

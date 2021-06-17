@@ -10,12 +10,14 @@ import {
   Hidden,
 } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { useRouter } from "next/router";
 
 import { StyledTabs, StyledTab } from "./Tab";
 import Drawer from "./Drawer";
 
 export default function Navbar() {
   const classes = useStyles();
+  const router = useRouter();
 
   return (
     <>
@@ -28,11 +30,12 @@ export default function Navbar() {
               <StyledTab label="About" />
               <StyledTab label="Pricing" />
               <StyledTab label="Documentation" />
-              <StyledTab label="Login" />
+              <StyledTab label="Login" onClick={() => router.push("/login")} />
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.primary}
+                onClick={() => router.push("/register")}
               >
                 SIGN UP
               </Button>

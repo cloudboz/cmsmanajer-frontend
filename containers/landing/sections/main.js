@@ -59,6 +59,10 @@ const useStyles = makeStyles((theme) => ({
       minHeight: 930,
     },
     [theme.breakpoints.down("sm")]: {
+      minHeight: 690,
+      maxHeight: 690,
+    },
+    [theme.breakpoints.down("xs")]: {
       minHeight: 750,
       maxHeight: 750,
     },
@@ -83,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 36,
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: 28,
+      fontSize: 32,
     },
   },
   subtitle: {
@@ -115,6 +119,9 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
     width: "45vw",
     top: theme.spacing(13),
+    [theme.breakpoints.up("xl")]: {
+      height: 950,
+    },
   },
   center: {
     alignItems: "center",
