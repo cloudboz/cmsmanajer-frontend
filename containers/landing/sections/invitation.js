@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
       paddingInline: theme.spacing(2),
       paddingBlock: theme.spacing(0.5),
       marginBottom: 15,
+      fontSize: 16,
     },
   },
   btnGroup: {

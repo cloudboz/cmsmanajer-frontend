@@ -18,7 +18,7 @@ export default function Feature() {
           className={classes.bold}
           paragraph
         >
-          An Autopilot for Server
+          AN AUTOPILOT FOR SERVER
         </Typography>
         <Typography variant="subtitle1" className={classes.sub} align="center">
           Optimised configurations and best practices for your servers? You can
