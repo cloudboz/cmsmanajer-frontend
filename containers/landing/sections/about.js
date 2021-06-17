@@ -6,36 +6,6 @@ import {
   Typography,
 } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  bg: {
-    background: `linear-gradient(96.72deg, ${theme.palette.primary.main} 19.52%, ${theme.palette.primary.light} 81.79%);`,
-  },
-  container: {
-    paddingBlock: theme.spacing(10),
-    color: "black",
-    alignItems: "center",
-  },
-  bold: {
-    fontWeight: 600,
-  },
-  primary: {
-    fontSize: 20,
-    fontWeight: "medium",
-    borderRadius: 50,
-    paddingInline: theme.spacing(4),
-    paddingBlock: theme.spacing(1.5),
-    width: "9rem",
-  },
-  item: {
-    paddingBlock: theme.spacing(2),
-    paddingInline: theme.spacing(4),
-  },
-  grid: {
-    justifyContent: "center",
-    marginBlockEnd: theme.spacing(4),
-  },
-}));
-
 export default function About() {
   const classes = useStyles();
 
@@ -88,3 +58,33 @@ export default function About() {
     </Container>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  bg: {
+    background: `linear-gradient(96.72deg, ${theme.palette.primary.main} 19.52%, ${theme.palette.primary.light} 81.79%);`,
+  },
+  container: {
+    paddingBlock: theme.spacing(10),
+    color: "black",
+    alignItems: "center",
+  },
+  bold: {
+    fontWeight: 600,
+  },
+  primary: {
+    fontSize: 20,
+    fontWeight: "medium",
+    borderRadius: 50,
+    paddingInline: theme.spacing(4),
+    paddingBlock: theme.spacing(1.5),
+    width: "9rem",
+  },
+  item: {
+    paddingBlock: theme.spacing(2),
+    paddingInline: theme.spacing(4),
+  },
+  grid: {
+    justifyContent: "center",
+    marginBlockEnd: theme.spacing(4),
+  },
+}));

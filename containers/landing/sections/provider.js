@@ -3,6 +3,18 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Navbar from "../components/Navbar";
 
+export default function Provider() {
+  const classes = useStyles();
+
+  return (
+    <Container maxWidth={false} className={classes.background}>
+      <Container maxWidth="lg" className={classes.container}>
+        <Typography>A</Typography>
+      </Container>
+    </Container>
+  );
+}
+
 const useStyles = makeStyles((theme) => ({
   image: {
     display: "block",
@@ -42,15 +54,3 @@ const useStyles = makeStyles((theme) => ({
     paddingBlock: theme.spacing(2),
   },
 }));
-
-export default function Provider() {
-  const classes = useStyles();
-
-  return (
-    <Container maxWidth={false} className={classes.background}>
-      <Container maxWidth="lg" className={classes.container}>
-        <Typography>A</Typography>
-      </Container>
-    </Container>
-  );
-}

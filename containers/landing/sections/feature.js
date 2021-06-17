@@ -6,26 +6,6 @@ import {
   Typography,
 } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    paddingBlock: theme.spacing(10),
-  },
-  item: {
-    paddingBlock: theme.spacing(3),
-    paddingInline: theme.spacing(5),
-  },
-  grid: {
-    justifyContent: "center",
-    marginBlockEnd: theme.spacing(5),
-  },
-  bold: {
-    fontWeight: 600,
-  },
-  sub: {
-    paddingInline: theme.spacing(12),
-  },
-}));
-
 export default function Feature() {
   const classes = useStyles();
 
@@ -87,3 +67,23 @@ export default function Feature() {
     </Container>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    paddingBlock: theme.spacing(10),
+  },
+  item: {
+    paddingBlock: theme.spacing(3),
+    paddingInline: theme.spacing(5),
+  },
+  grid: {
+    justifyContent: "center",
+    marginBlockEnd: theme.spacing(5),
+  },
+  bold: {
+    fontWeight: 600,
+  },
+  sub: {
+    paddingInline: theme.spacing(12),
+  },
+}));
