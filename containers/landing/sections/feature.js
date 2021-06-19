@@ -31,7 +31,7 @@ export default function Feature() {
               Security and Firewall
             </Typography>
             <Typography>
-              Automate updates system, secure architecture. We take away the worry
+              Automate updates system, secure architecture.
             </Typography>
           </Paper>
         </Grid>
