@@ -31,7 +31,7 @@ export default function Feature() {
               Security and Firewall
             </Typography>
             <Typography>
-              Automate updates system, Secure architecture. We take away the worry
+              Automate updates system, secure architecture. We take away the worry
             </Typography>
           </Paper>
         </Grid>
@@ -58,10 +58,10 @@ export default function Feature() {
         <Grid item xs>
           <Paper className={classes.item}>
             <Typography variant="h6" paragraph className={classes.paper}>
-              One-click Install apps or CMS
+              One-click Install Apps or CMS
             </Typography>
             <Typography>
-              Support all your favourite application or CMS like wordpress
+              Support all your favourite Application or CMS like WordPress
             </Typography>
           </Paper>
         </Grid>
