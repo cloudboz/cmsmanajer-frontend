@@ -7,7 +7,7 @@ export default function Footer() {
     <div className={classes.bg}>
       <Container maxWidth="lg" className={classes.container}>
         <Typography>
-          Copyright 2021 - CADABRA Indonesia. All rights reserved.
+          Copyright 2021 - CMS Manajer. All rights reserved.
         </Typography>
       </Container>
     </div>
