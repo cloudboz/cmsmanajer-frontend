@@ -19,7 +19,7 @@ export default function Invitation() {
               Make your life easier now!
             </Typography>
             <Typography variant="h5" paragraph className={classes.subtitle}>
-              Manage your server with only one click.
+              Manage your server with only one-click.
             </Typography>
             <div className={classes.btnGroup}>
               <Button
