@@ -21,20 +21,17 @@ export default function Feature() {
           AN AUTOPILOT FOR SERVER
         </Typography>
         <Typography variant="subtitle1" className={classes.sub} align="center">
-          Optimised configurations and best practices for your servers? You can
-          either leave them to us if you are not up to it or tinker with your
-          servers to your heart’s content
+          Tools for teams, from startup to enterprise
         </Typography>
       </Grid>
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs>
           <Paper className={classes.item}>
             <Typography variant="h6" paragraph className={classes.paper}>
-              Security
+              Security and Firewall
             </Typography>
             <Typography>
-              Automate updates and firewalls, Secure architecture. We take away
-              the worry
+              Automate updates system, secure architecture.
             </Typography>
           </Paper>
         </Grid>
@@ -44,7 +41,7 @@ export default function Feature() {
               Service Management
             </Typography>
             <Typography variant="body1">
-              Manage and monitoring multiple server with one dashboard.
+              Manage and monitoring multiple server with one dashboard
             </Typography>
           </Paper>
         </Grid>
@@ -54,18 +51,17 @@ export default function Feature() {
               Server Optimization
             </Typography>
             <Typography>
-              By default we update kernel configuration, create swap memory and
-              optimization performance
+              By default we update kernel configuration and performance optimization
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs>
           <Paper className={classes.item}>
             <Typography variant="h6" paragraph className={classes.paper}>
-              One-Click Install
+              One-click Install Apps or CMS
             </Typography>
             <Typography>
-              Support all your favourite application or CMS like wordpress
+              Support all your favourite Application or CMS like WordPress
             </Typography>
           </Paper>
         </Grid>

@@ -3,9 +3,9 @@ import { Head } from "next/document";
 
 const brand = {
   name: "CMS Manajer",
-  desc: "A simple control panel",
-  prefix: "microgen",
-  footerText: "A simple control panel",
+  desc: "A simple control panel for managing cloud server",
+  prefix: "cmsmanajer",
+  footerText: "A simple control panel for managing cloud server",
   logoText: "CMS Manajer",
   projectName: "CMS Manajer",
   url: "cmsmanajer.com",

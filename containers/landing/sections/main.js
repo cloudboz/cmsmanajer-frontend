@@ -26,11 +26,10 @@ export default function Main() {
         <Grid container className={classes.grid}>
           <Grid item md={7} className={classes.center}>
             <Typography variant="h2" className={classes.title}>
-              A Simple Control Panel for Managing Cloud Server
+              A simple control panel for managing cloud server
             </Typography>
             <Typography variant="h6" className={classes.subtitle}>
-              We make it simple to launch in the cloud and scale up as you grow
-              — with an intuitive control panel, predictable pricing and more.
+              We make it simple to launch application in the cloud and you don't need to be a linux expert to deploy a website. CMS Manajer can create, manage apps or sites with our graphical interface.
             </Typography>
             <Button
               variant="contained"

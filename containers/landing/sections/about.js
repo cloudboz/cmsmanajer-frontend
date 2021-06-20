@@ -30,8 +30,8 @@ export default function About() {
                 <Typography variant="body1" className={classes.bold} paragraph>
                   Products
                 </Typography>
-                <Typography variant="body2">CMS Manajer</Typography>
-                <Typography variant="body2">PushOver</Typography>
+                <Typography variant="body2">Features</Typography>
+                <Typography variant="body2">Pricing</Typography>
               </Box>
             </Grid>
             <Grid item xs>
@@ -40,7 +40,7 @@ export default function About() {
                   Resources
                 </Typography>
                 <Typography variant="body2">Documentation</Typography>
-                <Typography variant="body2">Getting Started</Typography>
+                <Typography variant="body2">Blog</Typography>
               </Box>
             </Grid>
             <Grid item xs>
@@ -48,7 +48,7 @@ export default function About() {
                 <Typography variant="body1" className={classes.bold} paragraph>
                   Company
                 </Typography>
-                <Typography variant="body2">About</Typography>
+                <Typography variant="body2">Careers</Typography>
                 <Typography variant="body2">Contact us</Typography>
               </Box>
             </Grid>
