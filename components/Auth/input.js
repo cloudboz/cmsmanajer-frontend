@@ -10,6 +10,8 @@ import {
   IconButton,
 } from "@material-ui/core";
 
+import React from "react";
+
 import { VisibilityOutlined, VisibilityOffOutlined } from "@material-ui/icons";
 
 export default function Input({
@@ -22,10 +24,15 @@ export default function Input({
   values,
   errors,
   touched,
-  showPassword,
-  handleClickShowPassword,
-  handleMouseDownPassword,
 }) {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   return (
     <FormControl className={className} fullWidth>
       <Typography variant="subtitle2">

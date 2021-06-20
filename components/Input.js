@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Container,
   makeStyles,
@@ -22,10 +23,15 @@ export default function Input({
   values,
   errors,
   touched,
-  showPassword,
-  handleClickShowPassword,
-  handleMouseDownPassword,
 }) {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   return (
     <FormControl className={className} fullWidth>
       <Typography variant="subtitle2">
@@ -34,7 +40,7 @@ export default function Input({
       <OutlinedInput
         name={name}
         type={
-          name == "password"
+          name.includes("password")
             ? showPassword
               ? "text"
               : "password"
@@ -52,7 +58,7 @@ export default function Input({
           backgroundColor: "#FAFAFA",
         }}
         endAdornment={
-          name == "password" && (
+          name.includes("password") && (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
