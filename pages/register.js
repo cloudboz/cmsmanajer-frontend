@@ -1,3 +1,3 @@
-import Register from "../containers/register";
+import Register from "../containers/auth/register";
 
 export default Register;

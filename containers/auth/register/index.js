@@ -2,9 +2,10 @@ import { Box, Container, Grid, Hidden, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Image from "next/image";
 import * as yup from "yup";
+import countries from "../../../utils/country-list.json";
 // import bg from "/public/bg.png";
 
-import Form from "../../components/Auth/form";
+import Form from "../components/Form";
 
 export default function Register() {
   const classes = useStyles();
@@ -13,7 +14,13 @@ export default function Register() {
     { name: "name", placeholder: "Bambang" },
     { name: "email", placeholder: "mail@cmsmanajer.com" },
     { name: "password", placeholder: "********" },
-    { name: "country", placeholder: "Indonesia" },
+    {
+      name: "country",
+      label: "Country",
+      placeholder: "Indonesia",
+      type: "select",
+      options: countries,
+    },
     { name: "job", placeholder: "Programmer" },
   ];
 
@@ -33,6 +40,11 @@ export default function Register() {
     job: yup.string().required(),
   });
 
+  const handleSubmit = (values) => {
+    console.log("register");
+    console.log(values);
+  };
+
   return (
     <Grid container className={classes.container} direction="row-reverse">
       <Image
@@ -45,7 +57,12 @@ export default function Register() {
       />
       <Grid item container md={5} sm className={classes.blue}>
         <Container maxWidth="xs" disableGutters style={{ padding: "5px" }}>
-          <Form data={form} text={text} schema={schema} />
+          <Form
+            data={form}
+            text={text}
+            schema={schema}
+            handleSubmit={handleSubmit}
+          />
         </Container>
       </Grid>
       <Hidden smDown>

@@ -1,6 +1,6 @@
 import { Container, Typography, makeStyles } from "@material-ui/core";
 import * as yup from "yup";
-import Form from "../../components/Auth/form";
+import Form from "../components/Form";
 import Image from "next/image";
 
 export default function Login() {
@@ -24,6 +24,11 @@ export default function Login() {
     password: yup.string().min(8).required(),
   });
 
+  const handleSubmit = (values) => {
+    console.log("login");
+    console.log(values);
+  };
+
   return (
     <Container className={classes.container} disableGutters maxWidth={false}>
       <Image
@@ -38,7 +43,12 @@ export default function Login() {
         <Typography variant="h5" className={classes.logo} align="center">
           CMS Manajer
         </Typography>
-        <Form data={form} text={text} schema={schema} />
+        <Form
+          data={form}
+          text={text}
+          schema={schema}
+          handleSubmit={handleSubmit}
+        />
       </Container>
     </Container>
   );
