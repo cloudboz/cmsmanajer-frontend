@@ -129,7 +129,7 @@ export default function Form({ text, data, schema, handleSubmit }) {
                       )}
                       value={values[input.name]}
                       onChange={(event, newValue) => {
-                        setFieldValue(input.name, newValue.name);
+                        setFieldValue(input.name, newValue?.name || "");
                       }}
                       inputValue={inputValue}
                       onInputChange={(event, newInputValue) => {
