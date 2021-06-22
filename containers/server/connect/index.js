@@ -16,7 +16,6 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 
-import Form from "../../../components/Auth/form";
 import Input from "../../../components/Input";
 
 const useStyles = makeStyles((theme) => ({
