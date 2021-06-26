@@ -2,26 +2,29 @@ import { Box, Container, Grid, Hidden, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Image from "next/image";
 import * as yup from "yup";
-import countries from "../../../utils/country-list.json";
-// import bg from "/public/bg.png";
+
+import countries from "utils/country-list.json";
+import { useRegister } from "hooks/auth";
 
 import Form from "../components/Form";
 
 export default function Register() {
   const classes = useStyles();
+  const { mutateAsync: register, isLoading } = useRegister();
 
   const form = [
-    { name: "name", placeholder: "Bambang" },
-    { name: "email", placeholder: "mail@cmsmanajer.com" },
+    { name: "name", placeholder: "e.g. Bambang" },
+    { name: "email", placeholder: "e.g. mail@cmsmanajer.com" },
     { name: "password", placeholder: "********" },
+    { name: "phone", placeholder: "+6281222222222", type: "phone" },
     {
       name: "country",
       label: "Country",
-      placeholder: "Indonesia",
+      placeholder: "e.g. Indonesia",
       type: "select",
       options: countries,
     },
-    { name: "job", placeholder: "Programmer" },
+    { name: "job", placeholder: "e.g. Programmer" },
   ];
 
   const text = {
@@ -36,13 +39,25 @@ export default function Register() {
     name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().min(8).required(),
+    phone: yup.string().required(),
     country: yup.string().required(),
     job: yup.string().required(),
   });
 
-  const handleSubmit = (values) => {
-    console.log("register");
+  const handleSubmit = async (values) => {
     console.log(values);
+    // try {
+    //   const {
+    //     data: { data },
+    //   } = await register(values);
+
+    //   Cookies.set("token", data.accessToken, { expires: 30 });
+    //   localStorage.setItem("token", data.accessToken);
+
+    //   router.push("/verify");
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   return (
@@ -62,6 +77,7 @@ export default function Register() {
             text={text}
             schema={schema}
             handleSubmit={handleSubmit}
+            isLoading={isLoading}
           />
         </Container>
       </Grid>

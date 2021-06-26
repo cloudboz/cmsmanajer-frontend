@@ -19,8 +19,9 @@ import { useRouter } from "next/router";
 
 import Input from "./Input";
 import Select from "./Select";
+import PhoneInput from "./PhoneInput";
 
-export default function Form({ text, data, schema, handleSubmit }) {
+export default function Form({ text, data, schema, handleSubmit, isLoading }) {
   const classes = useStyles();
   const router = useRouter();
   const [initialValues, setInitialValues] = React.useState({});
@@ -108,24 +109,6 @@ export default function Form({ text, data, schema, handleSubmit }) {
                             variant="outlined"
                           />
                         </FormControl>
-                        // <TextField
-                        //   {...params}
-                        //   label="controlled"
-                        //   margin="dense"
-                        //   variant="outlined"
-                        // />
-                        // <Input
-                        //   {...params}
-                        //   name={input.name}
-                        //   className={classes.form}
-                        //   values={values}
-                        //   touched={touched}
-                        //   errors={errors}
-                        //   // handleBlur={handleBlur}
-                        //   // handleChange={handleChange}
-                        //   key={i}
-                        //   placeholder={input.placeholder}
-                        // />
                       )}
                       value={values[input.name]}
                       onChange={(event, newValue) => {
@@ -137,19 +120,19 @@ export default function Form({ text, data, schema, handleSubmit }) {
                       }}
                       key={i}
                     />
-                    // <Select
-                    //   name={input.name}
-                    //   className={classes.form}
-                    //   placeholder={input.placeholder}
-                    //   values={values}
-                    //   options={input.options}
-                    //   renderOption="name"
-                    //   errors={errors}
-                    //   touched={touched}
-                    //   handleBlur={handleBlur}
-                    //   handleChange={handleChange}
-                    //   key={i}
-                    // />
+                  );
+                case "phone":
+                  return (
+                    <PhoneInput
+                      name={input.name}
+                      className={classes.form}
+                      values={values}
+                      errors={errors}
+                      touched={touched}
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      key={i}
+                    />
                   );
                 default:
                   return (
@@ -173,7 +156,7 @@ export default function Form({ text, data, schema, handleSubmit }) {
               size="large"
               fullWidth
               style={{ marginTop: "25px", marginBottom: "3px" }}
-              disabled={!dirty || !isValid}
+              disabled={!dirty || !isValid || isLoading}
               onClick={submitForm}
             >
               {text.button}
