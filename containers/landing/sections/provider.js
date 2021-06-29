@@ -1,8 +1,6 @@
 import { Button, Container, Grid, Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import Navbar from "../components/Navbar";
-
 export default function Provider() {
   const classes = useStyles();
 
@@ -44,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
   background: {
     backgroundColor: theme.palette.common.gray,
     height: 406,
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
     [theme.breakpoints.down("sm")]: {
       height: 570,
     },
@@ -54,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
   container: {
     height: "100%",
     paddingTop: 100,
+    position: "absolute",
+    zIndex: 100,
     [theme.breakpoints.down("xs")]: {
       paddingTop: 70,
     },
@@ -72,13 +75,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(10),
     fontWeight: "normal",
     marginBottom: theme.spacing(5),
-  },
-  primary: {
-    fontSize: 20,
-    fontWeight: "medium",
-    borderRadius: 50,
-    paddingInline: theme.spacing(6),
-    paddingBlock: theme.spacing(2),
   },
   bold: {
     fontWeight: 600,

@@ -25,6 +25,7 @@ export default function Invitation() {
               <Button
                 variant="contained"
                 color="primary"
+                size="large"
                 className={classes.primary}
               >
                 SIGN UP
@@ -32,13 +33,14 @@ export default function Invitation() {
               <Button
                 variant="outlined"
                 color="secondary"
+                size="large"
                 className={classes.primary}
               >
                 DOCS
               </Button>
             </div>
           </Grid>
-          <Grid item md={5}>
+          <Grid item md={5} style={{ position: "relative" }}>
             <img src="/pana.svg" className={classes.image} />
           </Grid>
         </Grid>
@@ -50,9 +52,11 @@ export default function Invitation() {
 const useStyles = makeStyles((theme) => ({
   bg: {
     background: `linear-gradient(96.72deg, ${theme.palette.primary.main} 19.52%, ${theme.palette.primary.light} 81.79%);`,
+    position: "relative",
   },
   text: {
-    paddingBlock: theme.spacing(10),
+    paddingTop: theme.spacing(10),
+    paddingBottom: theme.spacing(10),
     color: "white",
     alignSelf: "center",
   },
@@ -75,8 +79,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBlock: theme.spacing(1.5),
     width: "9rem",
     [theme.breakpoints.down("xs")]: {
-      paddingInline: theme.spacing(2),
-      paddingBlock: theme.spacing(0.5),
       marginBottom: 15,
       fontSize: 16,
     },
@@ -93,6 +95,8 @@ const useStyles = makeStyles((theme) => ({
   image: {
     paddingBlockStart: theme.spacing(3),
     display: "block",
+    // position: "absolute",
+    bottom: 0,
     width: "100%",
   },
 }));

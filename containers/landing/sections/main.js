@@ -22,6 +22,9 @@ export default function Main() {
         quality={100}
         style={{ zIndex: 0 }}
       />
+      <Hidden smDown>
+        <img src="/servers.svg" className={classes.image} />
+      </Hidden>
       <Container maxWidth="lg" className={classes.container}>
         <Grid container className={classes.grid}>
           <Grid item md={7} className={classes.center}>
@@ -29,21 +32,19 @@ export default function Main() {
               A simple control panel for managing cloud server
             </Typography>
             <Typography variant="h6" className={classes.subtitle}>
-              We make it simple to launch application in the cloud and you don't need to be a linux expert to deploy a website. CMS Manajer can create, manage apps or sites with our graphical interface.
+              We make it simple to launch application in the cloud and you don't
+              need to be a linux expert to deploy a website. CMS Manajer can
+              create, manage apps or sites with our graphical interface.
             </Typography>
             <Button
               variant="contained"
               color="primary"
+              size="large"
               className={classes.primary}
             >
               GET STARTED
             </Button>
           </Grid>
-          <Hidden smDown>
-            <Grid item md>
-              <img src="/servers.svg" className={classes.image} />
-            </Grid>
-          </Hidden>
         </Grid>
       </Container>
     </Container>
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
   background: {
     background: `linear-gradient(270deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
     minHeight: 830,
+    position: "relative",
     [theme.breakpoints.up("xl")]: {
       minHeight: 930,
     },
@@ -69,7 +71,8 @@ const useStyles = makeStyles((theme) => ({
   container: {
     height: "100%",
     alignContent: "center",
-    zIndex: 1,
+    zIndex: 2,
+    position: "relative",
   },
   grid: {
     minHeight: "100vh",
@@ -103,8 +106,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     fontWeight: "medium",
     borderRadius: 50,
-    paddingInline: theme.spacing(6),
-    paddingBlock: theme.spacing(2),
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(6),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     [theme.breakpoints.down("xs")]: {
       fontSize: 18,
       paddingInline: theme.spacing(4),
@@ -114,6 +119,7 @@ const useStyles = makeStyles((theme) => ({
   image: {
     display: "block",
     position: "absolute",
+    zIndex: 2,
     right: 0,
     height: "auto",
     width: "45vw",

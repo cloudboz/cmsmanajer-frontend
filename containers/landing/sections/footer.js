@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <div className={classes.bg}>
       <Container maxWidth="lg" className={classes.container}>
-        <Typography>
+        <Typography variant="body2">
           Copyright 2021 - CMS Manajer. All rights reserved.
         </Typography>
       </Container>
@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.dark,
   },
   container: {
-    paddingBlock: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     color: "white",
   },
 }));
