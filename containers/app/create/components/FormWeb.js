@@ -1,8 +1,5 @@
 import React from "react";
-import { ListItem } from "@material-ui/core";
 import {
-  Box,
-  Container,
   Typography,
   Grid,
   Button,
@@ -12,51 +9,47 @@ import {
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
 
-import Input from "../../../../components/Input";
-import Select from "../../../../components/Select";
-import Switch from "../../../../components/Switch";
+import Input from "components/Input";
+import Select from "components/Select";
 import FormUser from "./FormUser";
-
-const useStyles = makeStyles((theme) => ({
-  center: {
-    justifyItems: "center",
-    display: "grid",
-  },
-  empty: {},
-  btn: {
-    marginTop: theme.spacing(1),
-    fontSize: theme.typography.pxToRem(16),
-    paddingInline: theme.spacing(3),
-    paddingBlock: theme.spacing(1),
-  },
-  list: {
-    backgroundColor: "white",
-    borderRadius: 5,
-  },
-  form: {
-    marginBlock: "3px",
-  },
-}));
+import useServer from "hooks/server";
 
 const schema = yup.object({
+  name: yup.string().required(),
+  type: yup.string().required(),
+  domain: yup.string().required(),
   server: yup.mixed().required(),
   systemUser: yup.object().shape({
     id: yup.string(),
     username: yup.string().required(),
     password: yup.string().min(4).required(),
   }),
+  createUser: yup.boolean().required(),
 });
 
-export default function FormWeb({ name, classes, servers, users }) {
+export default function FormWeb({
+  name,
+  classes,
+  servers,
+  stack,
+  handleSubmit: handleSubmitForm,
+}) {
+  const [server, setServer] = React.useState(servers[0]);
+  const { getSysUsersByServer } = useServer();
+
+  const { data: users, isLoading } = getSysUsersByServer(server.id);
+
   const initialValues = {
     name,
+    type: stack,
     domain: "",
-    server: servers[0],
-    systemUser: users[0],
-  };
-
-  const handleSubmitForm = async (values) => {
-    console.log(values);
+    server,
+    systemUser: {
+      id: users?.[0].id,
+      username: users?.[0].username,
+      password: "nulll",
+    },
+    createUser: false,
   };
 
   const {
@@ -78,7 +71,14 @@ export default function FormWeb({ name, classes, servers, users }) {
     validationSchema: schema,
   });
 
-  return (
+  React.useEffect(() => {
+    setFieldValue("name", name);
+    setFieldValue("type", stack);
+  }, [name]);
+
+  return isLoading ? (
+    <h1>Loading</h1>
+  ) : (
     <form noValidate onSubmit={handleSubmit} autoComplete="off">
       <Grid container spacing={2}>
         <Grid item sm={6}>
@@ -86,7 +86,7 @@ export default function FormWeb({ name, classes, servers, users }) {
             name="name"
             label="Name"
             className={classes.form}
-            placeholder="My Web"
+            placeholder="e.g. My Web"
             values={values}
             errors={errors}
             touched={touched}
@@ -102,7 +102,10 @@ export default function FormWeb({ name, classes, servers, users }) {
             errors={errors}
             touched={touched}
             handleBlur={handleBlur}
-            handleChange={handleChange}
+            handleChange={(e) => {
+              setFieldValue("server", e.target.value);
+              setServer(e.target.value);
+            }}
             options={servers}
             renderOption="name"
           />
@@ -110,7 +113,7 @@ export default function FormWeb({ name, classes, servers, users }) {
             name="domain"
             label="Domain"
             className={classes.form}
-            placeholder="my.domain.com"
+            placeholder="e.g. sub.domain.com"
             values={values}
             errors={errors}
             touched={touched}
@@ -129,9 +132,7 @@ export default function FormWeb({ name, classes, servers, users }) {
             setFieldValue={setFieldValue}
           />
         </Grid>
-        <Grid item sm={6}>
-          <Typography>Test</Typography>
-        </Grid>
+        <Grid item sm={6}></Grid>
       </Grid>
       <Button
         variant="contained"

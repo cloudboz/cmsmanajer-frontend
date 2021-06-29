@@ -1,16 +1,37 @@
+import { Paper, makeStyles } from "@material-ui/core";
 import FormApp from "./FormApp";
 import FormWeb from "./FormWeb";
 import FormWP from "./FormWP";
 
 export default function Form(props) {
+  const classes = useStyles();
+
   switch (props.type) {
     case "app":
-      return <FormApp {...props} />;
+      return (
+        <Paper variant="outlined" className={classes.root}>
+          <FormApp {...props} />
+        </Paper>
+      );
     case "web":
-      return <FormWeb {...props} />;
+      return (
+        <Paper variant="outlined" className={classes.root}>
+          <FormWeb {...props} />
+        </Paper>
+      );
     case "wordpress":
-      return <FormWP {...props} />;
+      return (
+        <Paper variant="outlined" className={classes.root}>
+          <FormWP {...props} />
+        </Paper>
+      );
     default:
       return <></>;
   }
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: 30,
+  },
+}));

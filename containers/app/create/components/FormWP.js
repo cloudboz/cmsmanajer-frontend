@@ -1,52 +1,33 @@
 import React from "react";
-import { ListItem } from "@material-ui/core";
-import {
-  Box,
-  Container,
-  Typography,
-  Grid,
-  Button,
-  makeStyles,
-  FormControlLabel,
-} from "@material-ui/core";
+import { Grid, Button, makeStyles, FormControlLabel } from "@material-ui/core";
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
 
-import Input from "../../../../components/Input";
-import Select from "../../../../components/Select";
-import Switch from "../../../../components/Switch";
+import Input from "components/Input";
+import Select from "components/Select";
 import FormUser from "./FormUser";
-
-const useStyles = makeStyles((theme) => ({
-  center: {
-    justifyItems: "center",
-    display: "grid",
-  },
-  empty: {},
-  btn: {
-    marginTop: theme.spacing(1),
-    fontSize: theme.typography.pxToRem(16),
-    paddingInline: theme.spacing(3),
-    paddingBlock: theme.spacing(1),
-  },
-  list: {
-    backgroundColor: "white",
-    borderRadius: 5,
-  },
-  form: {
-    marginBlock: "3px",
-  },
-}));
+import useServer from "hooks/server";
 
 const wordpress = [
-  { name: "wordpress.title", label: "Title", placeholder: "My WordPress Blog" },
-  { name: "wordpress.username", label: "Username", placeholder: "admin" },
+  {
+    name: "wordpress.title",
+    label: "Title",
+    placeholder: "e.g. My WordPress Blog",
+  },
+  { name: "wordpress.username", label: "Username", placeholder: "e.g. admin" },
   { name: "wordpress.password", label: "Password", placeholder: "*****" },
-  { name: "wordpress.email", label: "email", placeholder: "admin@gmail.com" },
+  {
+    name: "wordpress.email",
+    label: "Email",
+    placeholder: "e.g. admin@gmail.com",
+  },
 ];
 
 const schema = yup.object({
+  name: yup.string().required(),
+  domain: yup.string().required(),
   server: yup.mixed().required(),
+  type: yup.string().required(),
   systemUser: yup.object().shape({
     id: yup.string(),
     username: yup.string().required(),
@@ -58,24 +39,37 @@ const schema = yup.object({
     password: yup.string().required(),
     email: yup.string().email().required(),
   }),
+  createUser: yup.boolean().required(),
 });
 
-export default function FormWP({ name, classes, servers, users }) {
+export default function FormWP({
+  name,
+  classes,
+  servers,
+  handleSubmit: handleSubmitForm,
+}) {
+  const [server, setServer] = React.useState(servers[0]);
+  const { getSysUsersByServer } = useServer();
+
+  const { data: users, isLoading } = getSysUsersByServer(server.id);
+
   const initialValues = {
     name: "",
     domain: "",
-    server: servers[0],
-    systemUser: users[0],
+    type: "wordpress",
+    server,
+    systemUser: {
+      id: users?.[0].id,
+      username: users?.[0].username,
+      password: "nulll",
+    },
     wordpress: {
       title: "",
       username: "",
       password: "",
       email: "",
     },
-  };
-
-  const handleSubmitForm = async (values) => {
-    console.log(values);
+    createUser: false,
   };
 
   const {
@@ -97,7 +91,9 @@ export default function FormWP({ name, classes, servers, users }) {
     validationSchema: schema,
   });
 
-  return (
+  return isLoading ? (
+    <h1>Loading</h1>
+  ) : (
     <form noValidate onSubmit={handleSubmit} autoComplete="off">
       <Grid container spacing={2}>
         <Grid item sm={6}>
@@ -105,7 +101,7 @@ export default function FormWP({ name, classes, servers, users }) {
             name="name"
             label="Name"
             className={classes.form}
-            placeholder="My App"
+            placeholder="e.g. My App"
             values={values}
             errors={errors}
             touched={touched}
@@ -121,7 +117,10 @@ export default function FormWP({ name, classes, servers, users }) {
             errors={errors}
             touched={touched}
             handleBlur={handleBlur}
-            handleChange={handleChange}
+            handleChange={(e) => {
+              setFieldValue("server", e.target.value);
+              setServer(e.target.value);
+            }}
             options={servers}
             renderOption="name"
           />
@@ -129,7 +128,7 @@ export default function FormWP({ name, classes, servers, users }) {
             name="domain"
             label="Domain"
             className={classes.form}
-            placeholder="sub.domain.com"
+            placeholder="e.g. sub.domain.com"
             values={values}
             errors={errors}
             touched={touched}

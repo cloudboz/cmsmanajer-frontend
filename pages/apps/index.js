@@ -1,3 +1,3 @@
-import CreateApp from "../../containers/app/create";
+import ListApp from "containers/app/list";
 
-export default CreateApp;
+export default ListApp;

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Container,
   makeStyles,
@@ -7,14 +8,12 @@ import {
   InputLabel,
   FormHelperText,
   InputAdornment,
-  Select,
-  MenuItem,
   IconButton,
 } from "@material-ui/core";
 
 import { VisibilityOutlined, VisibilityOffOutlined } from "@material-ui/icons";
 
-export default function SelectInput({
+export default function IPInput({
   className,
   label,
   placeholder,
@@ -24,34 +23,30 @@ export default function SelectInput({
   values,
   errors,
   touched,
-  options,
-  renderOption,
+  required,
 }) {
   return (
     <FormControl className={className} fullWidth>
       <Typography variant="subtitle2">
         {label || name.replace(name[0], name[0].toUpperCase())}
       </Typography>
-      <Select
+      <OutlinedInput
         name={name}
+        type="text"
         value={values[name]}
-        // placeholder={placeholder}
+        placeholder={placeholder}
         margin="dense"
+        error={touched[name] && !!errors[name]}
         onBlur={handleBlur}
         onChange={handleChange}
         style={{
           backgroundColor: "#FDFDFD",
         }}
-        variant="outlined"
-        renderValue={(selected) => selected[renderOption]}
-        defaultValue={options[0]}
-      >
-        {options.map((opt, i) => (
-          <MenuItem value={opt} key={i}>
-            {opt[renderOption]}
-          </MenuItem>
-        ))}
-      </Select>
+        required={required}
+      />
+      <FormHelperText disabled={!touched[name] || !errors[name]} error>
+        {touched[name] && errors[name]}
+      </FormHelperText>
     </FormControl>
   );
 }

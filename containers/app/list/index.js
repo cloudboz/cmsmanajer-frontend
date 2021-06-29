@@ -11,10 +11,10 @@ import React from "react";
 import { useRouter } from "next/router";
 
 import Layout from "components/Layout";
-import ListServer from "./list";
-import EmptyServer from "./empty";
+import ListApp from "./list";
+import EmptyApp from "./empty";
 
-import useServer from "hooks/server";
+import useApp from "hooks/app";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,28 +34,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Server() {
+export default function App() {
   const classes = useStyles();
   const router = useRouter();
-  const { getServers } = useServer();
+  const { getApps } = useApp();
 
-  const { data: servers, isLoading } = getServers();
+  const { data: apps, isLoading } = getApps();
 
   return (
     <Layout>
       <Grid container className={classes.root}>
         <Grid item>
           <Typography variant="h4" paragraph>
-            Servers
+            Apps
           </Typography>
         </Grid>
         <Grid item>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => router.push("/servers/connect")}
+            onClick={() => router.push("/apps/create")}
           >
-            Connect Server
+            Create App
           </Button>
         </Grid>
       </Grid>
@@ -63,10 +63,10 @@ export default function Server() {
         <>
           <h1>Loading</h1>
         </>
-      ) : servers?.length ? (
-        <ListServer servers={servers} />
+      ) : apps?.length ? (
+        <ListApp apps={apps} status="white" />
       ) : (
-        <EmptyServer />
+        <EmptyApp />
       )}
     </Layout>
   );

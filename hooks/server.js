@@ -8,25 +8,33 @@ const useServer = () => {
       return data.data;
     });
 
-  const getServerByID = (id) =>
-    useQuery("server", async () => {
-      const { data } = await API.get("/servers/" + id);
+  const getServerByID = (serverId) =>
+    useQuery(["server", serverId], async () => {
+      const { data } = await API.get("/servers/" + serverId);
       return data.data;
     });
 
-  const getAppsByServer = (id) =>
-    useQuery("serverApps", async () => {
-      const { data } = await API.get("/servers/" + id + "/apps");
+  const getAppsByServer = (serverId) =>
+    useQuery(["serverApps", serverId], async () => {
+      const { data } = await API.get("/servers/" + serverId + "/apps");
       return data.data;
     });
 
-  const getUsersByServer = (id) =>
-    useQuery("serverUsers", async () => {
-      const { data } = await API.get("/servers/" + id + "/users");
-      return data.data;
-    });
+  const getSysUsersByServer = (serverId) =>
+    useQuery(
+      ["serverUsers", serverId],
+      async () => {
+        const { data } = await API.get("/servers/" + serverId + "/users");
+        return data.data;
+      },
+      { enabled: !!serverId }
+    );
 
   const connectServer = useMutation((body) => API.post("/servers", body));
+
+  const updateServer = useMutation((id, body) =>
+    API.patch("/servers/" + id, body)
+  );
 
   const deleteServer = useMutation((id) => API.delete("/servers/" + id));
 
@@ -34,8 +42,9 @@ const useServer = () => {
     getServers,
     getServerByID,
     getAppsByServer,
-    getUsersByServer,
+    getSysUsersByServer,
     connectServer,
+    updateServer,
     deleteServer,
   };
 };

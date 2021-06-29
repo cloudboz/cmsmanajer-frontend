@@ -23,6 +23,8 @@ export default function Input({
   values,
   errors,
   touched,
+  required,
+  multiline,
 }) {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -49,14 +51,18 @@ export default function Input({
             : "text"
         }
         value={values[name]}
+        multiline={multiline}
+        fullWidth
+        rows={2}
         placeholder={placeholder}
         margin="dense"
         error={touched[name] && !!errors[name]}
         onBlur={handleBlur}
         onChange={handleChange}
         style={{
-          backgroundColor: "#FAFAFA",
+          backgroundColor: "#FDFDFD",
         }}
+        required={required}
         endAdornment={
           name.includes("password") && (
             <InputAdornment position="end">

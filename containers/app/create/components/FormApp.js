@@ -1,47 +1,16 @@
 import React from "react";
-import { ListItem } from "@material-ui/core";
-import {
-  Box,
-  Container,
-  Typography,
-  Grid,
-  Button,
-  makeStyles,
-  FormControlLabel,
-} from "@material-ui/core";
+import { Typography, Grid, Button } from "@material-ui/core";
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
 
-import Input from "../../../../components/Input";
-import Select from "../../../../components/Select";
-import Switch from "../../../../components/Switch";
+import Select from "components/Select";
 import FormUser from "./FormUser";
 
-const useStyles = makeStyles((theme) => ({
-  center: {
-    justifyItems: "center",
-    display: "grid",
-  },
-  empty: {},
-  btn: {
-    marginTop: theme.spacing(1),
-    fontSize: theme.typography.pxToRem(16),
-    paddingInline: theme.spacing(3),
-    paddingBlock: theme.spacing(1),
-  },
-  list: {
-    backgroundColor: "white",
-    borderRadius: 5,
-  },
-  form: {
-    marginBlock: "3px",
-  },
-}));
-
-const data = [{ name: "server", label: "Server", placeholder: "My Server" }];
+import useServer from "hooks/server";
+import { API } from "utils/api";
 
 const schema = yup.object({
-  name: yup.string(),
+  name: yup.string().required(),
   type: yup.string().required(),
   server: yup.mixed().required(),
   systemUser: yup.object().shape({
@@ -49,18 +18,30 @@ const schema = yup.object({
     username: yup.string().required(),
     password: yup.string().min(4).required(),
   }),
+  createUser: yup.boolean().required(),
 });
 
-export default function FormApp({ name, classes, servers, users }) {
+export default function FormApp({
+  name,
+  classes,
+  servers,
+  handleSubmit: handleSubmitForm,
+}) {
+  const [server, setServer] = React.useState(servers[0]);
+  const { getSysUsersByServer } = useServer();
+
+  const { data: users, isLoading } = getSysUsersByServer(server.id);
+
   const initialValues = {
     name,
     type: name.toLowerCase(),
-    server: servers[0],
-    systemUser: users[0],
-  };
-
-  const handleSubmitForm = async (values) => {
-    console.log(values);
+    server,
+    systemUser: {
+      id: users?.[0].id,
+      username: users?.[0].username,
+      password: "nulll",
+    },
+    createUser: false,
   };
 
   const {
@@ -82,7 +63,14 @@ export default function FormApp({ name, classes, servers, users }) {
     validationSchema: schema,
   });
 
-  return (
+  React.useEffect(() => {
+    setFieldValue("name", name);
+    setFieldValue("type", name.toLowerCase());
+  }, [name]);
+
+  return isLoading ? (
+    <h1>Loading</h1>
+  ) : (
     <form noValidate onSubmit={handleSubmit} autoComplete="off">
       <Grid container spacing={2}>
         <Grid item sm={6}>
@@ -95,7 +83,11 @@ export default function FormApp({ name, classes, servers, users }) {
             errors={errors}
             touched={touched}
             handleBlur={handleBlur}
-            handleChange={handleChange}
+            handleChange={(e) => {
+              console.log(values);
+              setFieldValue("server", e.target.value);
+              setServer(e.target.value);
+            }}
             options={servers}
             renderOption="name"
           />
@@ -111,22 +103,7 @@ export default function FormApp({ name, classes, servers, users }) {
             setFieldValue={setFieldValue}
           />
         </Grid>
-        <Grid item sm={6}>
-          <Typography>Test</Typography>
-        </Grid>
-        {/* {data.map((input, i) => (
-            <Input
-              name={input.name}
-              label={input.label}
-              className={classes.form}
-              placeholder={input.placeholder}
-              values={values}
-              errors={errors}
-              handleBlur={handleBlur}
-              handleChange={handleChange}
-              key={i}
-            />
-          ))} */}
+        <Grid item sm={6}></Grid>
       </Grid>
       <Button
         variant="contained"

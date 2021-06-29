@@ -1,5 +1,7 @@
 import { withStyles } from "@material-ui/core/styles";
 import { Tabs, Tab } from "@material-ui/core";
+import Link from "next/link";
+import router, { useRouter } from "next/router";
 
 const StyledTabs = withStyles((theme) => ({
   indicator: {
@@ -26,6 +28,18 @@ const StyledTab = withStyles((theme) => ({
       opacity: 1,
     },
   },
-}))((props) => <Tab disableRipple {...props} />);
+}))((props) => (
+  <Link href={props.href} passHref>
+    <Tab
+      disableRipple
+      component="a"
+      onClick={(event) => {
+        event.preventDefault();
+        router.push(props.href);
+      }}
+      {...props}
+    />
+  </Link>
+));
 
 export { StyledTabs, StyledTab };

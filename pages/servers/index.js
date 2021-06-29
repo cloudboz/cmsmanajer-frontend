@@ -1,3 +1,3 @@
-import ListServer from "../../containers/server/list";
+import Server from "../../containers/server/list";
 
-export default ListServer;
+export default Server;

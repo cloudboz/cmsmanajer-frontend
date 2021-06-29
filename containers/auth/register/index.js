@@ -13,7 +13,7 @@ export default function Register() {
   const { mutateAsync: register, isLoading } = useRegister();
 
   const form = [
-    { name: "name", placeholder: "e.g. Bambang" },
+    { name: "name", placeholder: "e.g. John Doe" },
     { name: "email", placeholder: "e.g. mail@cmsmanajer.com" },
     { name: "password", placeholder: "********" },
     { name: "phone", placeholder: "+6281222222222", type: "phone" },
@@ -45,19 +45,18 @@ export default function Register() {
   });
 
   const handleSubmit = async (values) => {
-    console.log(values);
-    // try {
-    //   const {
-    //     data: { data },
-    //   } = await register(values);
+    try {
+      const {
+        data: { data },
+      } = await register(values);
 
-    //   Cookies.set("token", data.accessToken, { expires: 30 });
-    //   localStorage.setItem("token", data.accessToken);
+      Cookies.set("token", data.accessToken, { expires: 30 });
+      localStorage.setItem("token", data.accessToken);
 
-    //   router.push("/verify");
-    // } catch (error) {
-    //   console.error(error);
-    // }
+      router.push("/verify");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

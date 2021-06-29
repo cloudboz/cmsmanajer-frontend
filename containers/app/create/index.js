@@ -1,8 +1,70 @@
 import React from "react";
 import { Box, Container, Typography, makeStyles } from "@material-ui/core";
 
+import Layout from "components/Layout";
 import Item from "./components/item";
 import Form from "./components/Form";
+
+import useServer from "hooks/server";
+import useApp from "hooks/app";
+import useSysUser from "hooks/systemUser";
+import { useRouter } from "next/router";
+
+export default function CreateApp({ user }) {
+  const classes = useStyles();
+  const router = useRouter();
+  const { getServers } = useServer();
+  const { createApp: create } = useApp();
+  const [type, setType] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [stack, setStack] = React.useState("");
+
+  const { data: servers, isLoading } = getServers();
+
+  const handleClick =
+    ({ name, type, stack }) =>
+    () => {
+      setName(name);
+      setType(type);
+      setStack(stack);
+    };
+
+  const handleSubmit = async (values) => {
+    console.log(values);
+    await create.mutateAsync(values);
+    router.push("/apps");
+  };
+
+  return (
+    <Layout>
+      <Typography variant="h4" paragraph>
+        Create App
+      </Typography>
+
+      <Box className={classes.root}>
+        {listApp.map((app, i) => (
+          <Item
+            name={app.name}
+            icon={app.icon}
+            key={i}
+            onClick={handleClick(app)}
+            active={app.name == name}
+          />
+        ))}
+      </Box>
+      <Box>
+        <Form
+          classes={classes}
+          servers={servers}
+          name={name}
+          type={type}
+          stack={stack}
+          handleSubmit={handleSubmit}
+        />
+      </Box>
+    </Layout>
+  );
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: "repeat(auto-fit, minmax(125px, 1fr))",
     gap: 10,
     // height: 150
-    marginBottom: 30,
+    marginBottom: 20,
     // justifyContent: "space-between",
     "& > *": {
       // margin: theme.spacing(1),
@@ -39,30 +101,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const requirements = [
-  "Your server must be Ubuntu 18.04 or 20.04 (64-bit).",
-  "Only clean servers (no Nginx, Apache, or MySQL installed) can be connected to CMS Manajer.",
-  "Installed python2.7 or python3.",
-  "Minimum of RAM 256MB.",
-];
-
-const data = [
-  { name: "name", label: "Server Name", placeholder: "Example" },
-  { name: "ip", label: "IP Address", placeholder: "104.21.59.111" },
-  { name: "username", placeholder: "ubuntu" },
-  { name: "password", placeholder: "********" },
-];
-
 const listApp = [
   {
     name: "Apache",
     icon: "/apache.svg",
     type: "web",
+    stack: "apache",
   },
   {
     name: "Nginx",
     icon: "/nginx.svg",
     type: "web",
+    stack: "nginx",
   },
   {
     name: "MySQL",
@@ -88,87 +138,12 @@ const listApp = [
     name: "LAMP",
     icon: "/lamp.svg",
     type: "web",
+    stack: "lamp",
   },
   {
     name: "LEMP",
     icon: "/lemp.svg",
     type: "web",
+    stack: "lemp",
   },
 ];
-
-export default function CreateApp() {
-  const classes = useStyles();
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [type, setType] = React.useState("");
-  const [name, setName] = React.useState("");
-
-  const servers = [
-    {
-      id: "asd",
-      name: "servername",
-      ip: "123.231.213.12",
-    },
-    {
-      id: "jhfkjd",
-      name: "staging 1",
-      ip: "01.10.10.10",
-    },
-  ];
-
-  const users = [
-    {
-      id: "asd",
-      username: "ubuntu",
-      password: "123.231.213.12",
-    },
-    {
-      id: "jhfkjd",
-      username: "usus buntu",
-      password: "01.10.10.10",
-    },
-  ];
-
-  // const handleClickShowPassword = () => {
-  //   setShowPassword(!showPassword);
-  // };
-
-  const handleClick =
-    ({ name, type }) =>
-    () => {
-      setName(name);
-      setType(type);
-    };
-
-  // const handleMouseDownPassword = (event) => {
-  //   event.preventDefault();
-  // };
-
-  return (
-    <Box>
-      <Typography variant="h4" paragraph>
-        Create App
-      </Typography>
-
-      <Box className={classes.root}>
-        {listApp.map((app, i) => (
-          <Item
-            name={app.name}
-            icon={app.icon}
-            key={i}
-            onClick={handleClick(app)}
-            active={app.name == name}
-          />
-        ))}
-      </Box>
-      <Box>
-        <Form
-          classes={classes}
-          servers={servers}
-          users={users}
-          name={name}
-          type={type}
-        />
-      </Box>
-    </Box>
-  );
-}

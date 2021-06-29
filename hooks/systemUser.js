@@ -14,21 +14,14 @@ const useSysUser = () => {
       return data.data;
     });
 
-  const getAppsBySysUser = (id) =>
-    useQuery("users", async () => {
-      const { data } = await API.get("/users/" + id + "/apps");
-      return data.data;
-    });
-
-  const connectSysUser = useMutation((body) => API.post("/users", body));
+  const createSysUser = useMutation((body) => API.post("/users", body));
 
   const deleteSysUser = useMutation((id) => API.delete("/users/", id));
 
   return {
     getSysUsers,
     getSysUserByID,
-    getAppsBySysUser,
-    connectSysUser,
+    createSysUser,
     deleteSysUser,
   };
 };

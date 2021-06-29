@@ -1,10 +1,16 @@
 import { Container, Typography, makeStyles } from "@material-ui/core";
-import * as yup from "yup";
-import Form from "../components/Form";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import * as yup from "yup";
+
+import Form from "../components/Form";
+import { useLogin } from "hooks/auth";
 
 export default function Login() {
   const classes = useStyles();
+  const router = useRouter();
+  const { mutateAsync: login, isLoading } = useLogin();
 
   const form = [
     { name: "email", placeholder: "mail@cmsmanajer.com" },
@@ -24,9 +30,19 @@ export default function Login() {
     password: yup.string().min(8).required(),
   });
 
-  const handleSubmit = (values) => {
-    console.log("login");
-    console.log(values);
+  const handleSubmit = async (values) => {
+    try {
+      const {
+        data: { data },
+      } = await login(values);
+
+      Cookies.set("token", data.accessToken, { expires: 30 });
+      localStorage.setItem("token", data.accessToken);
+
+      router.push("/servers");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -48,6 +64,7 @@ export default function Login() {
           text={text}
           schema={schema}
           handleSubmit={handleSubmit}
+          isLoading={isLoading}
         />
       </Container>
     </Container>

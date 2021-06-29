@@ -30,12 +30,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar() {
+export default function Navbar({ value: initValue }) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(initValue);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    if (newValue == -1) setValue(false);
+    else setValue(newValue);
   };
 
   return (
@@ -48,9 +49,8 @@ export default function Navbar() {
             </Typography>
             <Hidden xsDown>
               <StyledTabs value={value} onChange={handleChange}>
-                <StyledTab label="Servers" />
-                <StyledTab label="Apps" />
-                <StyledTab label="Support" />
+                <StyledTab label="Servers" href="/servers" />
+                <StyledTab label="Apps" href="/apps" />
               </StyledTabs>
             </Hidden>
           </Toolbar>

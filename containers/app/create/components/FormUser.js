@@ -1,47 +1,9 @@
 import React from "react";
-import { ListItem } from "@material-ui/core";
-import {
-  Box,
-  Container,
-  Typography,
-  Grid,
-  Button,
-  makeStyles,
-  MenuItem,
-  FormControlLabel,
-  List,
-  ListItemAvatar,
-  ListItemIcon,
-  ListItemText,
-  Avatar,
-} from "@material-ui/core";
-import { Formik } from "formik";
-import * as yup from "yup";
+import { makeStyles, FormControlLabel } from "@material-ui/core";
 
-import Input from "../../../../components/Input";
-import Select from "../../../../components/Select";
-import Switch from "../../../../components/Switch";
-
-const useStyles = makeStyles((theme) => ({
-  center: {
-    justifyItems: "center",
-    display: "grid",
-  },
-  empty: {},
-  btn: {
-    marginTop: theme.spacing(1),
-    fontSize: theme.typography.pxToRem(16),
-    paddingInline: theme.spacing(3),
-    paddingBlock: theme.spacing(1),
-  },
-  list: {
-    backgroundColor: "white",
-    borderRadius: 5,
-  },
-  form: {
-    marginBlock: "3px",
-  },
-}));
+import Input from "components/Input";
+import Select from "components/Select";
+import Switch from "components/Switch";
 
 const data = [
   { name: "systemUser.username", label: "Username", placeholder: "ubuntu" },
@@ -58,7 +20,8 @@ export default function FormUser({
   classes,
   setFieldValue,
 }) {
-  const [createUser, setCreateUser] = React.useState(false);
+  const [createUser, setCreateUser] = React.useState(values.createUser);
+
   const handleCreateUser = async () => {
     setCreateUser(!createUser);
   };
@@ -71,9 +34,18 @@ export default function FormUser({
     },
   };
 
-  React.useEffect(() => {
-    if (!createUser) setFieldValue("systemUser", options[0]);
-    else setFieldValue("systemUser", emptyValues.systemUser);
+  React.useEffect(async () => {
+    if (createUser) {
+      await setFieldValue("systemUser", emptyValues.systemUser);
+      setFieldValue("createUser", createUser);
+    } else {
+      await setFieldValue("systemUser", {
+        id: options[0].id,
+        username: options[0].username,
+        password: "null",
+      });
+      setFieldValue("createUser", createUser);
+    }
   }, [createUser]);
 
   return (
@@ -101,6 +73,7 @@ export default function FormUser({
               touched={touched}
               handleBlur={handleBlur}
               handleChange={handleChange}
+              required
               key={i}
             />
           ))}
@@ -113,11 +86,18 @@ export default function FormUser({
           options={options}
           renderOption="username"
           className={classes.form}
-          values={values}
+          values={values.systemUser}
           errors={errors}
           touched={touched}
           handleBlur={handleBlur}
-          handleChange={handleChange}
+          handleChange={(e) => {
+            const { id, username } = e.target.value;
+            setFieldValue("systemUser", {
+              id,
+              username,
+              password: "null",
+            });
+          }}
         />
       )}
     </>

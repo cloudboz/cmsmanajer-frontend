@@ -31,7 +31,7 @@ export default function EmptyServer() {
     <Container className={classes.center}>
       <img src="/empty.svg" className={classes.empty} />
       <Typography align="center" variant="h4" gutterBottom>
-        Connect your first server
+        Create your first app
       </Typography>
       <Typography align="center">
         Connect a server at your favorite provider to get best experience
@@ -44,9 +44,9 @@ export default function EmptyServer() {
         variant="contained"
         color="primary"
         className={classes.btn}
-        onClick={() => router.push("/servers/connect")}
+        onClick={() => router.push("/apps/create")}
       >
-        Connect Server
+        Create App
       </Button>
     </Container>
   );

@@ -33,6 +33,15 @@ const theme = createMuiTheme({
     MuiCssBaseline: {
       "@global": {
         "@font-face": [poppins],
+        boxSizing: "border-box",
+      },
+    },
+    MuiOutlinedInput: {
+      root: {
+        "&$focused $notchedOutline": {
+          borderColor: yellow.main,
+        },
+        // backgroundColor: common.white,
       },
     },
     MuiTabs: {
