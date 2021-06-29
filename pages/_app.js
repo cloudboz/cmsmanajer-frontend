@@ -4,6 +4,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import theme from "../styles/theme";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ export default function MyApp({ Component, pageProps, router }) {
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <Component {...pageProps} />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ThemeProvider>
     </React.Fragment>
