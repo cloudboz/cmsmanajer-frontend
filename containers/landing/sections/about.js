@@ -9,12 +9,44 @@ import {
   AccordionSummary as MuiAccordionSummary,
   AccordionDetails as MuiAccordionDetails,
   withStyles,
+  Link,
 } from "@material-ui/core";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-export default function About() {
+export default function About({ openContactUs }) {
   const classes = useStyles();
+
+  const items = [
+    {
+      group: "Products",
+      children: [
+        {
+          label: "Features",
+          href: "#features",
+        },
+      ],
+    },
+    {
+      group: "Resources",
+      children: [
+        {
+          label: "Documentation",
+          href: "https://docs.cmsmanajer.com",
+        },
+      ],
+    },
+    {
+      group: "Company",
+      children: [
+        {
+          label: "Contact us",
+          // href: "#features",
+          onClick: () => openContactUs(),
+        },
+      ],
+    },
+  ];
 
   return (
     <Container maxWidth={false}>
@@ -34,61 +66,59 @@ export default function About() {
           <Grid item sm={5} xs={12}>
             {/* For mobile */}
             <Hidden smUp>
-              <AccordionItem title="Products">
-                <Typography variant="body2">Features</Typography>
-                <Typography variant="body2">Pricing</Typography>
-              </AccordionItem>
-              <AccordionItem title="Resources">
-                <Typography variant="body2">Documentation</Typography>
-                <Typography variant="body2">Blog</Typography>
-              </AccordionItem>
-              <AccordionItem title="Company">
-                <Typography variant="body2">Careers</Typography>
-                <Typography variant="body2">Contact us</Typography>
-              </AccordionItem>
+              {items.map(({ group, children }, i) => {
+                const child = children.map(({ href, label, onClick }, i) => (
+                  <Link
+                    href={href}
+                    variant="body2"
+                    color="inherit"
+                    onClick={onClick}
+                    key={i}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {label}
+                  </Link>
+                ));
+
+                return (
+                  <AccordionItem title={group} key={i}>
+                    {child}
+                  </AccordionItem>
+                );
+              })}
             </Hidden>
             {/* End for mobile */}
             <Hidden xsDown>
               <Grid container className={classes.grid}>
-                <Grid item xs>
-                  <Box className={classes.item}>
-                    <Typography
-                      variant="body1"
-                      className={classes.bold}
-                      paragraph
+                {items.map(({ group, children }, i) => {
+                  const child = children.map(({ href, label, onClick }, i) => (
+                    <Link
+                      href={href}
+                      variant="body2"
+                      color="inherit"
+                      onClick={onClick}
+                      key={i}
+                      style={{ cursor: "pointer" }}
                     >
-                      Products
-                    </Typography>
-                    <Typography variant="body2">Features</Typography>
-                    <Typography variant="body2">Pricing</Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs>
-                  <Box className={classes.item}>
-                    <Typography
-                      variant="body1"
-                      className={classes.bold}
-                      paragraph
-                    >
-                      Resources
-                    </Typography>
-                    <Typography variant="body2">Documentation</Typography>
-                    <Typography variant="body2">Blog</Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs>
-                  <Box className={classes.item}>
-                    <Typography
-                      variant="body1"
-                      className={classes.bold}
-                      paragraph
-                    >
-                      Company
-                    </Typography>
-                    <Typography variant="body2">Careers</Typography>
-                    <Typography variant="body2">Contact us</Typography>
-                  </Box>
-                </Grid>
+                      {label}
+                    </Link>
+                  ));
+
+                  return (
+                    <Grid item xs key={i}>
+                      <Box className={classes.item}>
+                        <Typography
+                          variant="body1"
+                          className={classes.bold}
+                          paragraph
+                        >
+                          {group}
+                        </Typography>
+                        {child}
+                      </Box>
+                    </Grid>
+                  );
+                })}
               </Grid>
             </Hidden>
           </Grid>

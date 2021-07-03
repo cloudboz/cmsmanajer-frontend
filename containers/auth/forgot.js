@@ -96,5 +96,6 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     fontWeight: "bold",
     marginBottom: theme.spacing(3),
+    color: "white",
   },
 }));

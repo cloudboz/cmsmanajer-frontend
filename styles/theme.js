@@ -90,8 +90,9 @@ const theme = createMuiTheme({
         borderWidth: 2,
         "&:hover": {
           borderWidth: 2,
-          borderColor: yellow.dark,
-          color: yellow.dark,
+          opacity: 0.7,
+          borderColor: "white",
+          // color: yellow.dark,
         },
       },
     },

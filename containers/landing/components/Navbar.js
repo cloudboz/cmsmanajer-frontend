@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import { StyledTabs, StyledTab } from "./Tab";
 import Drawer from "./Drawer";
 
-export default function Navbar() {
+export default function Navbar({ openContactUs }) {
   const classes = useStyles();
   const router = useRouter();
 
@@ -27,15 +27,18 @@ export default function Navbar() {
             <Typography variant="h5">CMS Manajer</Typography>
             <div className={classes.grow} />
             <Hidden smDown>
-              <StyledTab label="About" />
-              <StyledTab label="Pricing" />
-              <StyledTab label="Documentation" />
-              <StyledTab label="Login" onClick={() => router.push("/login")} />
+              <StyledTab label="About" href="#" />
+              <StyledTab label="Contact Us" onClick={openContactUs} />
+              <StyledTab
+                label="Documentation"
+                href="https://docs.cmsmanajer.com"
+              />
+              <StyledTab label="Login" href="/login" />
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.primary}
-                onClick={() => router.push("/register")}
+                href="/register"
               >
                 SIGN UP
               </Button>

@@ -27,6 +27,7 @@ export default function Invitation() {
                 color="primary"
                 size="large"
                 className={classes.primary}
+                href="/register"
               >
                 SIGN UP
               </Button>
@@ -35,6 +36,7 @@ export default function Invitation() {
                 color="secondary"
                 size="large"
                 className={classes.primary}
+                href="https://docs.cmsmanajer.com"
               >
                 DOCS
               </Button>
@@ -73,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   },
   primary: {
     fontSize: 20,
-    fontWeight: "medium",
+    fontWeight: 500,
     borderRadius: 50,
     paddingInline: theme.spacing(4),
     paddingBlock: theme.spacing(1.5),

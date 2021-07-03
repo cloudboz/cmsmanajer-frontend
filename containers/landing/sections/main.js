@@ -41,6 +41,7 @@ export default function Main() {
               color="primary"
               size="large"
               className={classes.primary}
+              href="/register"
             >
               GET STARTED
             </Button>
@@ -104,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
   },
   primary: {
     fontSize: 20,
-    fontWeight: "medium",
+    fontWeight: 500,
     borderRadius: 50,
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),

@@ -12,6 +12,9 @@ const StyledTab = withStyles((theme) => ({
     paddingInline: theme.spacing(2),
     paddingBlock: theme.spacing(1),
     // backgroundColor: "red",
+    "&:hover": {
+      opacity: 0.8,
+    },
   },
 }))((props) => <Button {...props}>{props.label}</Button>);
 

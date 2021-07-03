@@ -10,7 +10,7 @@ export default function Feature() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth={false}>
+    <Container maxWidth={false} id="features">
       <Container maxWidth="lg" className={classes.container}>
         <Typography
           variant="h4"

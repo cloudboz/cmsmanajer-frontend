@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ModalBox({ open, handleClose, size, children }) {
+export default function Modal({ open, handleClose, size, children }) {
   const classes = useStyles();
 
   return (

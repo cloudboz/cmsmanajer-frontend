@@ -231,6 +231,7 @@ export default function ConnectServer() {
 104.21.59.112`
                               : input.placeholder
                           }
+                          rows={2}
                           key={i}
                           {...defaultProps}
                         />

@@ -12,7 +12,7 @@ export default function VerifyEmail({ email, from, to }) {
   const classes = useStyles();
   const router = useRouter();
   const { resendVerification, resendForgot } = useAuthentication();
-  const [timer, setTimer] = React.useState(5);
+  const [timer, setTimer] = React.useState(60);
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
 
@@ -37,7 +37,7 @@ export default function VerifyEmail({ email, from, to }) {
   const handleResend = async () => {
     try {
       await resend.mutateAsync({ email });
-      setTimer(5);
+      setTimer(60);
     } catch (error) {
       switch (error.response.status) {
         case 404:

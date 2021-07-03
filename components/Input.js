@@ -24,7 +24,8 @@ export default function Input({
   errors,
   touched,
   required,
-  multiline,
+  multiline = false,
+  rows = 5,
 }) {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -53,7 +54,7 @@ export default function Input({
         value={values[name]}
         multiline={multiline}
         fullWidth
-        rows={2}
+        rows={rows}
         placeholder={placeholder}
         margin="dense"
         error={touched[name] && !!errors[name]}

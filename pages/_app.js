@@ -27,18 +27,30 @@ export default function MyApp({ Component, pageProps, router }) {
     }
   }, []);
 
+  //* -------------- MAINTENANCE MODE -------------- *//
   if (
     !paths.includes(router.pathname) &&
     process.env.NEXT_PUBLIC_MAINTENANCE === "1"
   ) {
     return (
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <ComingSoon />
-      </ThemeProvider>
+      <React.Fragment>
+        <Head>
+          <title>CMS Manajer</title>
+          <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width"
+          />
+        </Head>
+        <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <ComingSoon />
+        </ThemeProvider>
+      </React.Fragment>
     );
   }
+
+  //* -------------- MAINTENANCE MODE -------------- *//
 
   return (
     <React.Fragment>

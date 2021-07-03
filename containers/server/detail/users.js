@@ -115,31 +115,34 @@ export default function ServerUsers({ users, server }) {
         <Typography variant="h5" paragraph>
           Create User
         </Typography>
-        {data.map((input, i) => (
-          <Input
-            name={input.name}
-            label={input.label}
-            className={classes.form}
-            placeholder={input.placeholder}
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
-            key={i}
-          />
-        ))}
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          className={classes.btn}
-          onClick={handleSubmit}
-          fullWidth
-          disabled={!dirty || !isValid || isLoading}
-        >
-          Create User
-        </Button>
+        <form onSubmit={handleSubmit}>
+          {data.map((input, i) => (
+            <Input
+              name={input.name}
+              label={input.label}
+              className={classes.form}
+              placeholder={input.placeholder}
+              values={values}
+              errors={errors}
+              touched={touched}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              key={i}
+            />
+          ))}
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            className={classes.btn}
+            type="submit"
+            onClick={handleSubmit}
+            fullWidth
+            disabled={!dirty || !isValid || isLoading}
+          >
+            Create User
+          </Button>
+        </form>
       </Modal>
     </Container>
   );
