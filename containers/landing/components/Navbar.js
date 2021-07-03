@@ -44,7 +44,7 @@ export default function Navbar({ openContactUs }) {
               </Button>
             </Hidden>
             <Hidden mdUp>
-              <Drawer />
+              <Drawer openContactUs={openContactUs} />
             </Hidden>
           </Toolbar>
         </Container>

@@ -13,7 +13,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import ListIcon from "@material-ui/icons/List";
 import { useRouter } from "next/router";
 
-export default function SwipeableTemporaryDrawer() {
+export default function SwipeableTemporaryDrawer({ openContactUs }) {
   const classes = useStyles();
   const router = useRouter();
   const [state, setState] = React.useState({
@@ -33,10 +33,13 @@ export default function SwipeableTemporaryDrawer() {
   };
 
   const listItems = [
-    { title: "ABOUT", route: "/about" },
-    { title: "PRICING", route: "/pricing" },
-    { title: "DOCUMENTATION", route: "/documentation" },
-    { title: "LOGIN", route: "/login" },
+    { title: "ABOUT", onClick: () => router.push("#") },
+    { title: "CONTACT US", onClick: () => openContactUs() },
+    {
+      title: "DOCUMENTATION",
+      onClick: () => router.push("https://docs.cmsmanajer.com"),
+    },
+    { title: "LOGIN", onClick: () => router.push("/login") },
   ];
 
   const list = (anchor) => (
@@ -50,7 +53,7 @@ export default function SwipeableTemporaryDrawer() {
     >
       <List>
         {listItems.map((text, index) => (
-          <ListItem button key={index} onClick={() => router.push(text.route)}>
+          <ListItem button key={index} onClick={() => text.onClick()}>
             <ListItemText primary={text.title} />
           </ListItem>
         ))}
