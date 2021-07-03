@@ -150,7 +150,7 @@ export default function Form({ onSubmit, isLoading }) {
                         onBlur={handleBlur}
                         style={{
                           backgroundColor: "#FAFAFA",
-                          marginTop: 0,
+                          margin: 0,
                         }}
                         variant="outlined"
                       />
@@ -218,6 +218,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   form: {
-    marginBlock: "3px",
+    marginTop: "3px",
+    marginBottom: "3px",
   },
 }));

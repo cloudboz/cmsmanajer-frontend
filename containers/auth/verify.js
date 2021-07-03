@@ -56,7 +56,7 @@ export default function VerifyEmail({ email, from, to }) {
 
   return (
     <Container className={classes.wrapper} disableGutters maxWidth={false}>
-      <Container className={classes.container}>
+      <Container maxWidth="sm" className={classes.container}>
         <Typography variant="h4" className={classes.title} align="center">
           Verify your email address
         </Typography>
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
   body: {
     // fontWeight: theme.typography.fontWeightMedium,
     marginBottom: 30,
-    width: 750,
+    // width: 750,
   },
   image: {
     display: "block",

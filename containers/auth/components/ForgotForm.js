@@ -54,10 +54,15 @@ export default function LoginForm({ onSubmit, isLoading }) {
 
   return (
     <Container className={classes.container} maxWidth="sm">
-      <Typography variant="h4" className={classes.bold}>
+      <Typography
+        variant="h4"
+        gutterBottom
+        style={{ lineHeight: "1em" }}
+        className={classes.bold}
+      >
         Forgot your password?
       </Typography>
-      <Typography variant="subtitle1" paragraph>
+      <Typography variant="subtitle1" style={{ lineHeight: "1.2em" }} paragraph>
         We'll email you instructions on how to reset your password.
       </Typography>
 
@@ -79,11 +84,16 @@ export default function LoginForm({ onSubmit, isLoading }) {
           size="large"
           fullWidth
           type="submit"
-          style={{ marginTop: "25px", marginBottom: "3px" }}
+          style={{ marginTop: "20px", marginBottom: "3px" }}
           disabled={!dirty || !isValid || isLoading}
         >
           Send me instructions
         </Button>
+        <Typography align="center" variant="subtitle2" className={classes.link}>
+          <Link href="/login" color="inherit">
+            Back to login
+          </Link>
+        </Typography>
       </form>
     </Container>
   );
@@ -103,6 +113,7 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     cursor: "pointer",
+    marginTop: 7,
     "&:hover": {
       color: theme.palette.secondary.main,
     },

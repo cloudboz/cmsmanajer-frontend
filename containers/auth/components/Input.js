@@ -37,7 +37,7 @@ export default function Input({
   const isPassword = name.includes("password");
 
   return (
-    <FormControl fullWidth style={{ marginBlock: "3px" }}>
+    <FormControl fullWidth style={{ marginTop: "3px", marginBottom: "3px" }}>
       <Typography variant="subtitle2">
         {label || name.replace(name[0], name[0].toUpperCase())}
       </Typography>

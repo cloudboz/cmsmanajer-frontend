@@ -107,5 +107,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     marginBottom: theme.spacing(3),
     color: "white",
+    cursor: "pointer",
   },
 }));

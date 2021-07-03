@@ -137,5 +137,6 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     fontWeight: "bold",
     marginBottom: 32,
+    cursor: "pointer",
   },
 }));

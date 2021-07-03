@@ -24,7 +24,8 @@ const useTooltipStyles = makeStyles((theme) => ({
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    marginBlock: "3px",
+    marginTop: "3px",
+    marginBottom: "3px",
   },
 }));
 
@@ -58,6 +59,7 @@ export default function PhoneInput({
         className={classes.form}
         style={{
           backgroundColor: "#FAFAFA",
+          margin: 0,
         }}
         InputProps={{
           endAdornment: (

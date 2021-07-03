@@ -8,7 +8,7 @@ export default function InvalidToken() {
 
   return (
     <Container className={classes.wrapper} disableGutters maxWidth={false}>
-      <Container className={classes.container}>
+      <Container maxWidth="sm" className={classes.container}>
         <Typography variant="h4" className={classes.title} align="center">
           Verification Failed
         </Typography>
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     // fontWeight: theme.typography.fontWeightMedium,
     marginBottom: 30,
-    width: 750,
+    // width: 750,
   },
   image: {
     display: "block",
