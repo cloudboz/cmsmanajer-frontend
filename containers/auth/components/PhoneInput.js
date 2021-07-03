@@ -22,6 +22,12 @@ const useTooltipStyles = makeStyles((theme) => ({
   },
 }));
 
+const useStyles = makeStyles((theme) => ({
+  form: {
+    marginBlock: "3px",
+  },
+}));
+
 export default function PhoneInput({
   name,
   label,
@@ -32,22 +38,24 @@ export default function PhoneInput({
   errors,
   touched,
 }) {
-  const classes = useTooltipStyles();
+  const classes = useStyles();
+  const classesTooltip = useTooltipStyles();
   return (
-    <FormControl className={className} fullWidth>
+    <FormControl fullWidth className={classes.form}>
       <Typography variant="subtitle2">
         {label || name.replace(name[0], name[0].toUpperCase())}
       </Typography>
       <MuiPhoneNumber
+        name={name}
         variant="outlined"
         margin="dense"
         value={values[name]}
-        error={!!errors[name]}
+        error={touched[name] && !!errors[name]}
         defaultCountry={"id"}
         onBlur={handleBlur}
         onChange={(e) => handleChange({ target: { name, value: e } })}
-        inputClass={className}
-        className={className}
+        inputClass={classes.form}
+        className={classes.form}
         style={{
           backgroundColor: "#FAFAFA",
         }}
@@ -55,7 +63,7 @@ export default function PhoneInput({
           endAdornment: (
             <InputAdornment position="end">
               <Tooltip
-                classes={classes}
+                classes={classesTooltip}
                 title="By continuing you will recieve a one-time verification code to your phone number by SMS. Message and data charges may apply."
               >
                 <IconButton aria-label="toggle info" edge="end">
@@ -67,7 +75,7 @@ export default function PhoneInput({
         }}
       />
       <FormHelperText disabled={!touched[name] || !errors[name]} error>
-        {errors[name]}
+        {touched[name] && errors[name]}
       </FormHelperText>
     </FormControl>
   );

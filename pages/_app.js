@@ -4,10 +4,20 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import theme from "../styles/theme";
+import ComingSoon from "./coming-soon";
 
 const queryClient = new QueryClient();
+const paths = [
+  "/",
+  "/register",
+  "/login",
+  "/verify",
+  "/verify/[token]",
+  "/reset-password",
+  "/reset-password/sent",
+  "/reset-password/[token]",
+];
 export default function MyApp({ Component, pageProps, router }) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -16,6 +26,19 @@ export default function MyApp({ Component, pageProps, router }) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
+
+  if (
+    !paths.includes(router.pathname) &&
+    process.env.NEXT_PUBLIC_MAINTENANCE === "1"
+  ) {
+    return (
+      <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        <ComingSoon />
+      </ThemeProvider>
+    );
+  }
 
   return (
     <React.Fragment>
@@ -31,7 +54,6 @@ export default function MyApp({ Component, pageProps, router }) {
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ThemeProvider>
     </React.Fragment>

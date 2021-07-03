@@ -6,12 +6,23 @@ export default Login;
 
 export const getServerSideProps = async (context) => {
   try {
-    const token = getCookie(context.req);
+    const token = getCookie(context.req, "token");
 
     setToken(token);
     const {
       data: { data: user },
     } = await API.get("/profile");
+
+    if (!user.verified)
+      return {
+        redirect: {
+          destination: "/verify",
+          permanent: false,
+        },
+        props: {
+          user,
+        },
+      };
 
     return {
       redirect: {

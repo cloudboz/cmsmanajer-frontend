@@ -5,7 +5,7 @@ import redirect from "utils/redirect";
 
 VerifyEmail.getInitialProps = async (context) => {
   try {
-    const token = getCookie(context.req);
+    const token = getCookie(context.req, "token");
 
     setToken(token);
     const {
@@ -16,8 +16,14 @@ VerifyEmail.getInitialProps = async (context) => {
       redirect(context, "/servers");
     }
 
-    return { user };
-  } catch (error) {}
+    return {
+      email: user.email,
+      from: "register",
+      to: "to finish the registration process",
+    };
+  } catch (error) {
+    redirect(context, "/register");
+  }
 };
 
 export default VerifyEmail;

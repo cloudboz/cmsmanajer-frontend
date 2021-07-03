@@ -99,8 +99,6 @@ export default function About() {
 }
 
 function AccordionItem({ title, children }) {
-  const classes = useStyles();
-
   return (
     <Accordion elevation={0}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -141,30 +139,6 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     justifyContent: "center",
     marginBottom: theme.spacing(4),
-  },
-  accordion: {
-    padding: 0,
-    backgroundColor: "transparent",
-    "&$expanded": {
-      margin: "auto",
-    },
-  },
-  summary: {
-    padding: 0,
-    minHeight: 50,
-    "&$expanded": {
-      minHeight: 50,
-      // margin: "auto",
-    },
-    "&$expanded $content": {
-      margin: "12px 0",
-    },
-  },
-  detail: {
-    display: "grid",
-    paddingTop: 0,
-    paddingBottom: 0,
-    rowGap: 10,
   },
 }));
 

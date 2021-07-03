@@ -155,9 +155,9 @@ export default function Form({ text, data, schema, handleSubmit, isLoading }) {
               color="primary"
               size="large"
               fullWidth
+              type="submit"
               style={{ marginTop: "25px", marginBottom: "3px" }}
               disabled={!dirty || !isValid || isLoading}
-              onClick={submitForm}
             >
               {text.button}
             </Button>

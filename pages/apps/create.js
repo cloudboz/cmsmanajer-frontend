@@ -6,7 +6,7 @@ export default CreateApp;
 
 export const getServerSideProps = async (context) => {
   try {
-    const token = getCookie(context.req);
+    const token = getCookie(context.req, "token");
 
     setToken(token);
     const {

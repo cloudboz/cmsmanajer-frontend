@@ -1,18 +1,15 @@
-import InvalidToken from "containers/auth/invalidToken";
-import { verify } from "hooks/auth";
+import ResetPassword from "containers/auth/reset";
+import { verifyForgot } from "hooks/auth";
 
-export default InvalidToken;
+export default ResetPassword;
 
 export const getServerSideProps = async ({ query }) => {
   try {
     const { token } = query;
-    await verify({ token });
+    await verifyForgot({ token });
 
     return {
-      redirect: {
-        destination: "/servers",
-        permanent: false,
-      },
+      props: { verified: true, token },
     };
 
     // return { props: { verified: true } };

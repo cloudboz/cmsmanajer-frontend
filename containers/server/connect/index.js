@@ -47,7 +47,7 @@ const data = [
 const initialValues = {
   name: "",
   ip: "",
-  webServer: "",
+  webServer: "nginx",
   systemUser: {
     username: "",
     password: "",
@@ -56,11 +56,13 @@ const initialValues = {
 
 const schema = yup.object({
   name: yup.string().required(),
-  ip: yup.string().required(),
-  // .matches(
-  //   /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$/,
-  //   "Please provide a valid IP"
-  // ),
+  ip: yup
+    .string()
+    .required()
+    .matches(
+      /^(((\d+)(\.(?!$))){3}(\d+)(\n(?!$)|$))*$/,
+      "Please provide a valid IP"
+    ),
   webServer: yup.string().notRequired(),
   systemUser: yup.object().shape({
     username: yup.string().required(),
@@ -166,16 +168,16 @@ export default function ConnectServer() {
               <Typography variant="subtitle2">I’d prefer to use</Typography>
               <Box className={classes.stackWrapper}>
                 <Stack
-                  name="Apache"
-                  value="apache"
-                  icon={<img src="/apache.svg" className={classes.icon} />}
+                  name="Nginx"
+                  value="nginx"
+                  icon={<img src="/nginx.svg" className={classes.icon} />}
                   values={values}
                   setFieldValue={setFieldValue}
                 />
                 <Stack
-                  name="Nginx"
-                  value="nginx"
-                  icon={<img src="/nginx.svg" className={classes.icon} />}
+                  name="Apache"
+                  value="apache"
+                  icon={<img src="/apache.svg" className={classes.icon} />}
                   values={values}
                   setFieldValue={setFieldValue}
                 />
@@ -254,7 +256,7 @@ export default function ConnectServer() {
                 size="large"
                 style={{ marginTop: "25px", marginBottom: "3px" }}
                 disabled={!dirty || !isValid || connect.isLoading}
-                onClick={submitForm}
+                type="submit"
               >
                 Connect
               </Button>

@@ -4,6 +4,7 @@ import {
   Typography,
   Grid,
   Button,
+  Tooltip,
   makeStyles,
 } from "@material-ui/core";
 
@@ -13,8 +14,10 @@ import { useRouter } from "next/router";
 import Layout from "components/Layout";
 import ListApp from "./list";
 import EmptyApp from "./empty";
+import EmptyServer from "./empty";
 
 import useApp from "hooks/app";
+import useServer from "hooks/server";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,8 +41,10 @@ export default function App() {
   const classes = useStyles();
   const router = useRouter();
   const { getApps } = useApp();
+  const { getServers } = useServer();
 
   const { data: apps, isLoading } = getApps();
+  const { data: servers, isLoading: isLoadingServer } = getServers();
 
   return (
     <Layout>
@@ -50,23 +55,33 @@ export default function App() {
           </Typography>
         </Grid>
         <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => router.push("/apps/create")}
+          <Tooltip
+            title="You haven't connected any servers"
+            disableHoverListener={servers?.length}
           >
-            Create App
-          </Button>
+            <span>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => router.push("/apps/create")}
+                disable={!servers?.length}
+              >
+                Create App
+              </Button>
+            </span>
+          </Tooltip>
         </Grid>
       </Grid>
-      {isLoading ? (
+      {isLoading || isLoadingServer ? (
         <>
           <h1>Loading</h1>
         </>
       ) : apps?.length ? (
         <ListApp apps={apps} status="white" />
-      ) : (
+      ) : servers?.length ? (
         <EmptyApp />
+      ) : (
+        <EmptyServer />
       )}
     </Layout>
   );

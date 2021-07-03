@@ -33,15 +33,18 @@ export default function Input({
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const isPassword = name.includes("password");
+
   return (
-    <FormControl className={className} fullWidth>
+    <FormControl fullWidth style={{ marginBlock: "3px" }}>
       <Typography variant="subtitle2">
         {label || name.replace(name[0], name[0].toUpperCase())}
       </Typography>
       <OutlinedInput
         name={name}
         type={
-          name == "password"
+          isPassword
             ? showPassword
               ? "text"
               : "password"
@@ -59,7 +62,7 @@ export default function Input({
           backgroundColor: "#FAFAFA",
         }}
         endAdornment={
-          name == "password" && (
+          isPassword && (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"

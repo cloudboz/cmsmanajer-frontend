@@ -19,7 +19,7 @@ export default function ListServer({ servers }) {
   return (
     <Container disableGutters className={classes.center}>
       <ListHeader items={headers} width={width} />
-      {servers?.map(({ id, name, ip, webServer }, i) => (
+      {servers?.map(({ id, name, ip, webServer, apps }, i) => (
         <ListItem
           id={id}
           status="#32D69F"
@@ -36,7 +36,7 @@ export default function ListServer({ servers }) {
                 <Typography>{webServer || "-"}</Typography>
               </Box>
               <Box style={{ width: width[3] }}>
-                <Typography>{3}</Typography>
+                <Typography>{apps}</Typography>
               </Box>
             </>
           }

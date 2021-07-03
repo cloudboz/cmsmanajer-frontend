@@ -33,10 +33,7 @@ const StyledTab = withStyles((theme) => ({
     <Tab
       disableRipple
       component="a"
-      onClick={(event) => {
-        event.preventDefault();
-        router.push(props.href);
-      }}
+      onClick={props.onClick || null}
       {...props}
     />
   </Link>

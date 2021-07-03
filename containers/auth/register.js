@@ -1,61 +1,65 @@
-import { Box, Container, Grid, Hidden, Typography } from "@material-ui/core";
+import React from "react";
+import {
+  Box,
+  Container,
+  Grid,
+  Hidden,
+  Typography,
+  Link,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Image from "next/image";
-import * as yup from "yup";
+import Cookies from "js-cookie";
 
-import countries from "utils/country-list.json";
-import { useRegister } from "hooks/auth";
+import { useAuthentication } from "hooks/auth";
+import { setToken } from "utils/api";
 
-import Form from "../components/Form";
+import RegisterForm from "./components/RegisterForm";
+import Snackbar from "components/Snackbar";
+import { useRouter } from "next/router";
 
 export default function Register() {
   const classes = useStyles();
-  const { mutateAsync: register, isLoading } = useRegister();
+  const router = useRouter();
+  const { register } = useAuthentication();
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState("");
 
-  const form = [
-    { name: "name", placeholder: "e.g. John Doe" },
-    { name: "email", placeholder: "e.g. mail@cmsmanajer.com" },
-    { name: "password", placeholder: "********" },
-    { name: "phone", placeholder: "+6281222222222", type: "phone" },
-    {
-      name: "country",
-      label: "Country",
-      placeholder: "e.g. Indonesia",
-      type: "select",
-      options: countries,
-    },
-    { name: "job", placeholder: "e.g. Programmer" },
-  ];
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-  const text = {
-    title: "Sign Up",
-    subtitle: "Already have an account?",
-    title2: "Login",
-    button: "Create Account",
-    route: "/login",
+    setOpen(false);
   };
-
-  const schema = yup.object({
-    name: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().min(8).required(),
-    phone: yup.string().required(),
-    country: yup.string().required(),
-    job: yup.string().required(),
-  });
 
   const handleSubmit = async (values) => {
     try {
       const {
         data: { data },
-      } = await register(values);
+      } = await register.mutateAsync(values);
 
       Cookies.set("token", data.accessToken, { expires: 30 });
       localStorage.setItem("token", data.accessToken);
+      setToken(data.accessToken);
 
       router.push("/verify");
     } catch (error) {
-      console.error(error);
+      console.error(error.response);
+      switch (error.response.status) {
+        case 400:
+          setMessage(error.response.data?.message);
+          break;
+        case 403:
+          setMessage(
+            "Your email address or phone number has already been used."
+          );
+          break;
+        default:
+          setMessage("Internal server error");
+          break;
+      }
+      setOpen(true);
     }
   };
 
@@ -71,12 +75,15 @@ export default function Register() {
       />
       <Grid item container md={5} sm className={classes.blue}>
         <Container maxWidth="xs" disableGutters style={{ padding: "5px" }}>
-          <Form
-            data={form}
-            text={text}
-            schema={schema}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
+          <RegisterForm
+            onSubmit={handleSubmit}
+            isLoading={register.isLoading}
+          />
+          <Snackbar
+            severity="error"
+            message={message}
+            open={open}
+            handleClose={handleClose}
           />
         </Container>
       </Grid>
@@ -86,9 +93,9 @@ export default function Register() {
             maxWidth="sm"
             style={{ paddingRight: "50px", marginBlock: "100px" }}
           >
-            <Typography variant="h5" className={classes.logo}>
+            <Link variant="h5" className={classes.logo} href="/">
               CMS Manajer
-            </Typography>
+            </Link>
             <Typography variant="h3" className={classes.bold} paragraph>
               A few clicks away from connecting your server
             </Typography>
@@ -129,6 +136,6 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     fontWeight: "bold",
-    marginBottom: theme.spacing(10),
+    marginBottom: 32,
   },
 }));

@@ -1,18 +1,18 @@
 import cookie from "cookie";
 import Cookies from "js-cookie";
 
-function getTokenCookie(data) {
-  const tkn = Cookies.get("token");
-  const x = cookie.parse(data?.headers?.cookie || "");
+function getCookie(data, name) {
+  const val = Cookies.get(name);
+  const v = cookie.parse(data?.headers?.cookie || "");
 
-  let token = undefined;
-  if (Object.keys(x).length > 0) {
-    token = x.token;
+  let value = undefined;
+  if (Object.keys(v).length > 0) {
+    value = v[name];
   } else {
-    token = tkn;
+    value = val;
   }
 
-  return token;
+  return value;
 }
 
-export default getTokenCookie;
+export default getCookie;

@@ -1,13 +1,10 @@
 import React from "react";
 import { Container, Typography, Button, makeStyles } from "@material-ui/core";
 import { useRouter } from "next/router";
-import Cookies from "js-cookie";
 
-export default function EmailVerified() {
+export default function InvalidToken() {
   const classes = useStyles();
   const router = useRouter();
-
-  const handleClick = () => router.push("/login");
 
   return (
     <Container className={classes.wrapper} disableGutters maxWidth={false}>
@@ -19,15 +16,6 @@ export default function EmailVerified() {
         <Typography variant="body1" className={classes.content} align="center">
           Your verification token is invalid, we cannot process your request.
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.btn}
-          size="large"
-          onClick={handleClick}
-        >
-          Login
-        </Button>
       </Container>
     </Container>
   );
@@ -40,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "center",
     justifyContent: "center",
     display: "grid",
-    // backgroundImage: `url(${bg})`,
-    // backgroundSize: "cover",
-    // backgroundPosition: "center",
   },
   container: {
     display: "grid",

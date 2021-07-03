@@ -3,20 +3,55 @@ import { Container, Typography, Button, makeStyles } from "@material-ui/core";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import obscureEmail from "utils/obscureEmail";
+import { useAuthentication } from "hooks/auth";
 
-export default function VerifyEmail({ user }) {
+import Snackbar from "components/Snackbar";
+
+export default function VerifyEmail({ email, from, to }) {
   const classes = useStyles();
   const router = useRouter();
+  const { resendVerification, resendForgot } = useAuthentication();
+  const [timer, setTimer] = React.useState(5);
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState("");
 
-  const obscure = (string) =>
-    string[0] + string.substring(1).replace(/./gi, "*");
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-  const obscureEmail = (email) => {
-    const split = email.split("@");
-    const split2 = split[1].split(".");
-    const obscured =
-      obscure(split[0]) + "@" + obscure(split2[0]) + "." + obscure(split2[1]);
-    return obscured;
+    setOpen(false);
+  };
+
+  React.useEffect(() => {
+    if (timer != 0) {
+      setTimeout(() => {
+        setTimer(timer - 1);
+      }, 1000);
+    }
+  }, [timer]);
+
+  const resend = from == "register" ? resendVerification : resendForgot;
+
+  const handleResend = async () => {
+    try {
+      await resend.mutateAsync({ email });
+      setTimer(5);
+    } catch (error) {
+      switch (error.response.status) {
+        case 404:
+          setMessage("You haven't registered to CMS Manajer");
+          break;
+        case 400:
+          setMessage("Please wait 60 seconds before resending email.");
+          break;
+        default:
+          setMessage("Internal server error");
+          break;
+      }
+      setOpen(true);
+    }
   };
 
   return (
@@ -26,20 +61,27 @@ export default function VerifyEmail({ user }) {
           Verify your email address
         </Typography>
         <img src="/email-sent1.svg" className={classes.image} />
-        <Typography variant="body1" className={classes.content} align="center">
-          We’ve sent a verification email to <b>{obscureEmail(user.email)}</b>.
-          Please click on the link in your email to finish the registration
-          process
+        <Typography variant="body1" className={classes.body} align="center">
+          We’ve sent an email to <b>{obscureEmail(email)}</b>. Please click on
+          the link in your email {to}
         </Typography>
         <Button
           variant="contained"
           color="primary"
           className={classes.btn}
           size="large"
+          onClick={handleResend}
+          disabled={timer != 0 || resend.isLoading}
         >
-          Resend Email
+          {timer == 0 ? "Resend Email" : timer}
         </Button>
       </Container>
+      <Snackbar
+        severity="error"
+        message={message}
+        open={open}
+        handleClose={handleClose}
+      />
     </Container>
   );
 }
@@ -51,9 +93,6 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "center",
     justifyContent: "center",
     display: "grid",
-    // backgroundImage: `url(${bg})`,
-    // backgroundSize: "cover",
-    // backgroundPosition: "center",
   },
   container: {
     display: "grid",
@@ -63,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium,
     marginBottom: 45,
   },
-  content: {
+  body: {
     // fontWeight: theme.typography.fontWeightMedium,
     marginBottom: 30,
     width: 750,
@@ -76,5 +115,6 @@ const useStyles = makeStyles((theme) => ({
   btn: {
     borderRadius: 30,
     paddingInline: 25,
+    width: "11em",
   },
 }));
