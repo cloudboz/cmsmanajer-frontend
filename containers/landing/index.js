@@ -10,6 +10,7 @@ export default function Landing() {
   const [open, setOpen] = React.useState(false);
   const [openBar, setOpenBar] = React.useState(false);
   const [message, setMessage] = React.useState("");
+  const [type, setType] = React.useState("success");
 
   const { contact } = useContact();
 
@@ -32,6 +33,9 @@ export default function Landing() {
   const handleContact = async (values) => {
     try {
       await contact.mutateAsync(values);
+      setType("success");
+      setMessage("Email sent.");
+      setOpenBar(true);
       setOpen(false);
     } catch (error) {
       console.log(error.response);
@@ -43,6 +47,7 @@ export default function Landing() {
           setMessage("Internal server error");
           break;
       }
+      setType("error");
       setOpenBar(true);
     }
   };
@@ -56,11 +61,11 @@ export default function Landing() {
       <Invitation />
       <About openContactUs={handleOpen} />
       <Footer />
-      <Modal open={open} handleClose={handleClose}>
+      <Modal open={open} keepOnClickAway handleClose={handleClose}>
         <ContactForm onSubmit={handleContact} isLoading={contact.isLoading} />
       </Modal>
       <Snackbar
-        severity="error"
+        severity={type}
         message={message}
         open={openBar}
         handleClose={handleCloseBar}
