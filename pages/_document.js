@@ -19,15 +19,6 @@ export default class MyDocument extends Document {
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
           ></script>
-
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-02RBLP4EZC"></script>
-          <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-02RBLP4EZC');
-          </script>
         </Head>
         <body>
           <Main />
