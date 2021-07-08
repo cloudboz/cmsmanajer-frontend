@@ -191,7 +191,10 @@ export default function Form({ onSubmit, isLoading }) {
         </Button>
 
         <Typography variant="caption" align="center" display="block">
-          By signing up, you agree to the <strong>Terms of Service</strong>
+          By signing up, you agree to the{" "}
+          <Link href="/tos" color="inherit" className={classes.link}>
+            <strong>Terms of Service</strong>
+          </Link>
         </Typography>
       </form>
     </Container>
