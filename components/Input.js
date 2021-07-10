@@ -21,6 +21,7 @@ export default function Input({
   handleBlur,
   handleChange,
   values,
+  value,
   errors,
   touched,
   required,
@@ -36,7 +37,7 @@ export default function Input({
     event.preventDefault();
   };
   return (
-    <FormControl className={className} fullWidth>
+    <FormControl className={className} style={{ marginBlock: 3 }} fullWidth>
       <Typography variant="subtitle2">
         {label || name.replace(name[0], name[0].toUpperCase())}
       </Typography>
@@ -51,7 +52,7 @@ export default function Input({
             ? "email"
             : "text"
         }
-        value={values[name]}
+        value={values ? values[name] : value}
         multiline={multiline}
         fullWidth
         rows={rows}

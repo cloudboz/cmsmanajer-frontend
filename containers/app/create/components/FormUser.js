@@ -31,6 +31,7 @@ export default function FormUser({
       id: "",
       username: "",
       password: "",
+      sshKeyId: "",
     },
   };
 
@@ -91,11 +92,12 @@ export default function FormUser({
           touched={touched}
           handleBlur={handleBlur}
           handleChange={(e) => {
-            const { id, username } = e.target.value;
+            const { id, username, sshKey = {} } = e.target.value;
             setFieldValue("systemUser", {
               id,
               username,
               password: "null",
+              sshKey: sshKey.name,
             });
           }}
         />

@@ -12,11 +12,11 @@ import { API } from "utils/api";
 const schema = yup.object({
   name: yup.string().required(),
   type: yup.string().required(),
-  server: yup.mixed().required(),
   systemUser: yup.object().shape({
     id: yup.string(),
     username: yup.string().required(),
     password: yup.string().min(4).required(),
+    sshKey: yup.string(),
   }),
   createUser: yup.boolean().required(),
 });
@@ -24,10 +24,9 @@ const schema = yup.object({
 export default function FormApp({
   name,
   classes,
-  servers,
+  server,
   handleSubmit: handleSubmitForm,
 }) {
-  const [server, setServer] = React.useState(servers[0]);
   const { getSysUsersByServer } = useServer();
 
   const { data: users, isLoading } = getSysUsersByServer(server.id);
@@ -35,7 +34,6 @@ export default function FormApp({
   const initialValues = {
     name,
     type: name.toLowerCase(),
-    server,
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
@@ -74,24 +72,6 @@ export default function FormApp({
     <form noValidate onSubmit={handleSubmit} autoComplete="off">
       <Grid container spacing={2}>
         <Grid item sm={6}>
-          <Select
-            name="server"
-            label="Server"
-            className={classes.form}
-            placeholder="Choose server..."
-            values={values.server}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={(e) => {
-              console.log(values);
-              setFieldValue("server", e.target.value);
-              setServer(e.target.value);
-            }}
-            options={servers}
-            renderOption="name"
-          />
-
           <FormUser
             values={values}
             errors={errors}

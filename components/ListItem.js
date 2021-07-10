@@ -5,14 +5,17 @@ const radius = 15;
 const padding = 60;
 const active = "#32D69F";
 
-export default function ListItem({ id, path, renderItem, status }) {
+export default function ListItem({ id, path, renderItem, status, onClick }) {
   const classes = useStyles();
   const router = useRouter();
 
   return (
     <Box
       className={classes.root}
-      onClick={() => path && router.push(path + "/" + id)}
+      onClick={() => {
+        if (path) router.push(path + "/" + id);
+        else if (onClick) onClick();
+      }}
     >
       <Box variant="outlined" className={classes.item}>
         {renderItem}

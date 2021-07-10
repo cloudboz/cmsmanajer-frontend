@@ -20,22 +20,21 @@ import useApp from "hooks/app";
 export default function DetailApp({ id }) {
   const classes = useStyles();
   const router = useRouter();
-  const { getAppByID, getDatabasesByApp } = useApp();
+  const { getAppByID } = useApp();
 
-  const { data: app, isLoading: isLoadingServer } = getAppByID(id);
-  const { data: dbs, isLoading: isLoadingApps } = getDatabasesByApp(id);
+  const { data: app, isLoading: isLoadingServer, refetch } = getAppByID(id);
 
   const tabsItem = ["Databases", "Settings"];
 
   return (
     <Layout>
-      {isLoadingServer || isLoadingApps || isLoadingUsers ? (
+      {isLoadingServer ? (
         <h1>Loading</h1>
       ) : (
         <>
           <Grid container style={{ justifyContent: "space-between" }}>
             <Grid item>
-              <Typography variant="h4">{server.name}</Typography>
+              <Typography variant="h4">{app.name}</Typography>
               <Grid container spacing={5}>
                 <Grid item>
                   <Typography variant="body1" paragraph>
@@ -45,7 +44,7 @@ export default function DetailApp({ id }) {
 
                 <Grid item>
                   <Typography variant="body1" paragraph>
-                    IP: {app.server.ip}
+                    IP: {app.server.ip.replace("\n", "; ")}
                   </Typography>
                 </Grid>
 
@@ -59,8 +58,8 @@ export default function DetailApp({ id }) {
           </Grid>
 
           <Tabs items={tabsItem}>
-            <AppDatabases dbs={dbs} />
-            <AppSettings app={app} />
+            <AppDatabases app={app} />
+            <AppSettings app={app} refetch={refetch} />
           </Tabs>
         </>
       )}

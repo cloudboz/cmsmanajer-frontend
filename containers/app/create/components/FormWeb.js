@@ -18,11 +18,11 @@ const schema = yup.object({
   name: yup.string().required(),
   type: yup.string().required(),
   domain: yup.string().required(),
-  server: yup.mixed().required(),
   systemUser: yup.object().shape({
     id: yup.string(),
     username: yup.string().required(),
     password: yup.string().min(4).required(),
+    sshKey: yup.string(),
   }),
   createUser: yup.boolean().required(),
 });
@@ -30,11 +30,10 @@ const schema = yup.object({
 export default function FormWeb({
   name,
   classes,
-  servers,
+  server,
   stack,
   handleSubmit: handleSubmitForm,
 }) {
-  const [server, setServer] = React.useState(servers[0]);
   const { getSysUsersByServer } = useServer();
 
   const { data: users, isLoading } = getSysUsersByServer(server.id);
@@ -43,7 +42,7 @@ export default function FormWeb({
     name,
     type: stack,
     domain: "",
-    server,
+
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
@@ -93,22 +92,7 @@ export default function FormWeb({
             handleBlur={handleBlur}
             handleChange={handleChange}
           />
-          <Select
-            name="server"
-            label="Server"
-            className={classes.form}
-            placeholder="Choose server..."
-            values={values.server}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={(e) => {
-              setFieldValue("server", e.target.value);
-              setServer(e.target.value);
-            }}
-            options={servers}
-            renderOption="name"
-          />
+
           <Input
             name="domain"
             label="Domain"

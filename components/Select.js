@@ -22,6 +22,7 @@ export default function SelectInput({
   handleBlur,
   handleChange,
   values,
+  value,
   errors,
   touched,
   options,
@@ -34,7 +35,7 @@ export default function SelectInput({
       </Typography>
       <Select
         name={name}
-        value={values[name]}
+        value={values ? values[name] : value}
         // placeholder={placeholder}
         margin="dense"
         onBlur={handleBlur}

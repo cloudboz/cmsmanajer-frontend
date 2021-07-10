@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EmptyServer() {
+export default function EmptyApp() {
   const classes = useStyles();
   const router = useRouter();
 
@@ -34,11 +34,7 @@ export default function EmptyServer() {
         Create your first app
       </Typography>
       <Typography align="center">
-        Connect a server at your favorite provider to get best experience
-        managing server. We'll install
-      </Typography>
-      <Typography align="center" paragraph gutterBottom>
-        everything you need like LAMP, LEMP, etc.
+        Create or install apps to your server and manage it easily
       </Typography>
       <Button
         variant="contained"

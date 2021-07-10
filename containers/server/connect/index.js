@@ -28,6 +28,7 @@ import { useRouter } from "next/router";
 import Layout from "components/Layout";
 import Input from "components/Input";
 import Modal from "components/Modal";
+import Snackbar from "components/Snackbar";
 import useServer from "hooks/server";
 
 const requirements = [
@@ -51,44 +52,49 @@ const initialValues = {
   systemUser: {
     username: "",
     password: "",
+    sshKey: "",
   },
 };
-
-const schema = yup.object({
-  name: yup.string().required(),
-  ip: yup
-    .string()
-    .required()
-    .matches(
-      /^(((\d+)(\.(?!$))){3}(\d+)(\n(?!$)|$))*$/,
-      "Please provide a valid IP"
-    ),
-  webServer: yup.string().notRequired(),
-  systemUser: yup.object().shape({
-    username: yup.string().required(),
-    password: yup.string().min(4).required(),
-  }),
-});
 
 export default function ConnectServer() {
   const classes = useStyles();
   const router = useRouter();
-  const [open, setOpen] = React.useState(false);
   const [multiple, setMultiple] = React.useState(false);
+  const [sshKey, setSshKey] = React.useState(false);
   const { connectServer: connect } = useServer();
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const schema = yup.object({
+    name: yup.string().required(),
+    ip: yup
+      .string()
+      .required()
+      .matches(
+        /^(((\d+)(\.(?!$))){3}(\d+)(\n(?!$)|$))*$/,
+        "Please provide a valid IP"
+      ),
+    webServer: yup.string().notRequired(),
+    systemUser: yup.object({
+      username: yup.string().required(),
+      password: yup
+        .string()
+        .min(4)
+        .when("issshKey", (_, schema) => {
+          return !sshKey ? schema.required() : schema.notRequired();
+        }),
+      sshKey: yup.string().when("ispassword", (_, schema) => {
+        return sshKey ? schema.required() : schema.notRequired();
+      }),
+    }),
+  });
 
   const handleSubmitForm = async (values) => {
-    console.log(values);
-    await connect.mutateAsync(values);
-    router.push("/servers");
+    try {
+      console.log(values);
+      await connect.mutateAsync(values);
+      router.push("/servers");
+    } catch (error) {
+      alert(error.response?.data?.message);
+    }
   };
 
   const {
@@ -118,6 +124,11 @@ export default function ConnectServer() {
     errors,
     touched,
   };
+
+  React.useEffect(() => {
+    setFieldValue("systemUser.password", "");
+    setFieldValue("systemUser.sshKey", "");
+  }, [sshKey]);
 
   return (
     <Layout>
@@ -194,63 +205,88 @@ export default function ConnectServer() {
                   setFieldValue={setFieldValue}
                 />
               </Box>
-              {data.map((input, i) => {
-                switch (input.name) {
-                  case "ip":
-                    return (
-                      <Box key={i}>
-                        <FormControlLabel
-                          label={
-                            <Typography variant="subtitle1">
-                              Add multiple server
-                            </Typography>
-                          }
-                          control={
-                            <Checkbox
-                              checked={multiple}
-                              onChange={() => setMultiple(!multiple)}
-                              color="secondary"
-                            />
-                          }
-                        />
-                        {multiple && (
-                          <Alert severity="warning">
-                            <Typography variant="subtitle2">
-                              Username and password must be same
-                            </Typography>
-                          </Alert>
-                        )}
-                        <Input
-                          name={input.name}
-                          label={input.label}
-                          multiline={multiple}
-                          className={classes.form}
-                          placeholder={
-                            multiple
-                              ? `e.g. 104.21.59.111
-104.21.59.112`
-                              : input.placeholder
-                          }
-                          rows={2}
-                          key={i}
-                          {...defaultProps}
-                        />
-                      </Box>
-                    );
 
-                  default:
-                    return (
-                      <Input
-                        name={input.name}
-                        label={input.label}
-                        className={classes.form}
-                        placeholder={input.placeholder}
-                        key={i}
-                        {...defaultProps}
-                      />
-                    );
+              <Input
+                name="name"
+                label="Server Name"
+                placeholder="e.g. Example"
+                {...defaultProps}
+              />
+
+              <FormControlLabel
+                label={
+                  <Typography variant="subtitle1">
+                    Add multiple server
+                  </Typography>
                 }
-              })}
+                control={
+                  <Checkbox
+                    checked={multiple}
+                    onChange={() => setMultiple(!multiple)}
+                    color="secondary"
+                  />
+                }
+              />
+              {multiple && (
+                <Alert severity="warning">
+                  <Typography variant="subtitle2">
+                    Username and password must be same
+                  </Typography>
+                </Alert>
+              )}
+              <Input
+                name="ip"
+                label="IP Address"
+                multiline={multiple}
+                placeholder={
+                  multiple
+                    ? `e.g. 104.21.59.111
+104.21.59.112`
+                    : "e.g. 104.21.59.111"
+                }
+                rows={2}
+                {...defaultProps}
+              />
+
+              <Input
+                name="systemUser.username"
+                label="Username"
+                placeholder="e.g. Example"
+                {...defaultProps}
+              />
+
+              <FormControlLabel
+                label={<Typography variant="subtitle1">Use SSH Key</Typography>}
+                control={
+                  <Checkbox
+                    checked={sshKey}
+                    onChange={() => setSshKey(!sshKey)}
+                    color="secondary"
+                  />
+                }
+              />
+              {!sshKey && (
+                <Input
+                  name="systemUser.password"
+                  label="Password"
+                  placeholder="e.g. *********"
+                  {...defaultProps}
+                />
+              )}
+              {sshKey && (
+                <Input
+                  name="systemUser.sshKey"
+                  label="Private Key"
+                  placeholder={`e.g. -----BEGIN RSA PRIVATE KEY-----
+L8AsOpF9j2OvMPppF2ZvGIw2mJZp6EIFUoOzSUv9G5zZ90rTVtvu0Fi
+...
+-----END RSA PRIVATE KEY-----`}
+                  multiline
+                  rows={5}
+                  {...defaultProps}
+                />
+              )}
+
               <Button
                 variant="contained"
                 color="primary"
@@ -265,8 +301,6 @@ export default function ConnectServer() {
           </Paper>
         </Grid>
       </Grid>
-
-      <Modal size="xs" open={open} handleClose={handleClose}></Modal>
     </Layout>
   );
 }
@@ -320,6 +354,7 @@ const useStyles = makeStyles((theme) => ({
   },
   stackWrapper: {
     display: "flex",
+    flexWrap: "wrap",
     // direction: "row",
     // gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     gap: 10,
@@ -328,14 +363,15 @@ const useStyles = makeStyles((theme) => ({
     // height: 60,
   },
   stack: {
-    paddingInline: 20,
+    paddingLeft: 20,
+    paddingRight: 30,
     paddingBlock: 10,
     display: "flex",
     flexWrap: "wrap",
     alignItems: "center",
     columnGap: 10,
     height: 60,
-    minWidth: 150,
+    // minWidth: 150,
     backgroundColor: "#FDFDFD",
     boxShadow: `inset 0 0 0 1px rgba(0, 0, 0, 0.23)`,
     cursor: "pointer",

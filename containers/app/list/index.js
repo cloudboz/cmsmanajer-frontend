@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import Layout from "components/Layout";
 import ListApp from "./list";
 import EmptyApp from "./empty";
-import EmptyServer from "./empty";
+import EmptyServer from "../../server/list/empty";
 
 import useApp from "hooks/app";
 import useServer from "hooks/server";
@@ -64,7 +64,7 @@ export default function App() {
                 variant="contained"
                 color="primary"
                 onClick={() => router.push("/apps/create")}
-                disable={!servers?.length}
+                disabled={!servers?.length}
               >
                 Create App
               </Button>

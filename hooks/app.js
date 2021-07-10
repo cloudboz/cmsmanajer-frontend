@@ -22,7 +22,9 @@ const useApp = () => {
 
   const createApp = useMutation((body) => API.post("/apps", body));
 
-  const updateApp = useMutation((id, body) => API.patch("/apps/" + id, body));
+  const updateApp = useMutation(({ id, body }) =>
+    API.patch("/apps/" + id, body)
+  );
 
   const deleteApp = useMutation((id) => API.delete("/apps/" + id));
 

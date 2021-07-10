@@ -31,6 +31,7 @@ export default function Modal({
   size,
   children,
   keepOnClickAway = false,
+  fullWidth = false,
 }) {
   const classes = useStyles();
 
@@ -43,6 +44,7 @@ export default function Modal({
       disableBackdropClick={keepOnClickAway}
       disableEscapeKeyDown={keepOnClickAway}
       maxWidth={size}
+      fullWidth={fullWidth}
     >
       {keepOnClickAway && (
         <IconButton

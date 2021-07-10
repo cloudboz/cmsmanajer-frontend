@@ -32,7 +32,7 @@ const useServer = () => {
 
   const connectServer = useMutation((body) => API.post("/servers", body));
 
-  const updateServer = useMutation((id, body) =>
+  const editServer = useMutation(({ id, body }) =>
     API.patch("/servers/" + id, body)
   );
 
@@ -44,7 +44,7 @@ const useServer = () => {
     getAppsByServer,
     getSysUsersByServer,
     connectServer,
-    updateServer,
+    editServer,
     deleteServer,
   };
 };

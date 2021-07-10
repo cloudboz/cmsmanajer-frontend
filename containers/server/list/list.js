@@ -30,7 +30,7 @@ export default function ListServer({ servers }) {
                 <Typography>{name}</Typography>
               </Box>
               <Box style={{ width: width[1] }}>
-                <Typography>{ip}</Typography>
+                <Typography>{ip.replace("\n", "; ")}</Typography>
               </Box>
               <Box style={{ width: width[2] }}>
                 <Typography>{webServer || "-"}</Typography>

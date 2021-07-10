@@ -17,18 +17,25 @@ import ListHeader from "components/ListHeader";
 import ListItem from "components/ListItem";
 
 import useSysUser from "hooks/systemUser";
+import useServer from "hooks/server";
 
 const schema = yup.object({
   username: yup.string().required(),
   password: yup.string().min(4).required(),
 });
 
-export default function ServerUsers({ users, server }) {
+export default function ServerUsers({ server }) {
   const classes = useStyles();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const { getSysUsersByServer } = useServer();
   const { createSysUser } = useSysUser();
 
+  const {
+    data: users,
+    isLoading: isLoadingUsers,
+    refetch,
+  } = getSysUsersByServer(server.id);
   const { mutateAsync: create, isLoading } = createSysUser;
 
   const {
@@ -40,8 +47,6 @@ export default function ServerUsers({ users, server }) {
     touched,
     isValid,
     dirty,
-    submitForm,
-    setFieldValue,
   } = useFormik({
     initialValues: {
       username: "",
@@ -66,9 +71,14 @@ export default function ServerUsers({ users, server }) {
   };
 
   const handleSubmitForm = async (values) => {
-    // console.log(values);
-    await create(values);
-    setOpen(false);
+    try {
+      // console.log(values);
+      await create(values);
+      refetch();
+      setOpen(false);
+    } catch (error) {
+      console.log(error.response?.message);
+    }
   };
 
   const data = [
@@ -115,7 +125,7 @@ export default function ServerUsers({ users, server }) {
         <Typography variant="h5" paragraph>
           Create User
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate autoComplete="off">
           {data.map((input, i) => (
             <Input
               name={input.name}
@@ -136,7 +146,6 @@ export default function ServerUsers({ users, server }) {
             size="large"
             className={classes.btn}
             type="submit"
-            onClick={handleSubmit}
             fullWidth
             disabled={!dirty || !isValid || isLoading}
           >

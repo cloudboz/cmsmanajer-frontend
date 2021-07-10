@@ -6,6 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { QueryClient, QueryClientProvider } from "react-query";
 import theme from "../styles/theme";
 import ComingSoon from "./coming-soon";
+import { UserProvider } from "context/auth";
 
 const queryClient = new QueryClient();
 const paths = [
@@ -65,7 +66,9 @@ export default function MyApp({ Component, pageProps, router }) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
+          <UserProvider>
+            <Component {...pageProps} />
+          </UserProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </React.Fragment>

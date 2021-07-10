@@ -1,4 +1,4 @@
-import { Paper, Typography, makeStyles } from "@material-ui/core";
+import { Paper, Typography, makeStyles, Box } from "@material-ui/core";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import clsx from "clsx";
 
@@ -13,14 +13,26 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     height: 125,
     position: "relative",
+    zIndex: 0,
+    backgroundColor: "#FDFDFD",
+    borderColor: "rgba(0, 0, 0, 0.23)",
+  },
+  hover: {
     "&:hover": {
       borderWidth: 2,
       borderColor: theme.palette.secondary.main,
+      backgroundColor: theme.palette.common.white,
     },
+  },
+  disabled: {
+    cursor: "not-allowed",
+    opacity: 0.5,
+    backgroundColor: theme.palette.common.gray,
   },
   active: {
     borderWidth: 2,
     borderColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.common.white,
   },
   icon: {
     height: 45,
@@ -40,14 +52,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Item({ icon, name, active, onClick }) {
+export default function Item({ icon, name, active, disabled, onClick }) {
   const classes = useStyles();
 
   return (
     <Paper
       variant="outlined"
-      className={clsx(classes.root, active && classes.active)}
-      onClick={onClick}
+      className={clsx(
+        classes.root,
+        !disabled && classes.hover,
+        active && classes.active,
+        !!disabled && classes.disabled
+      )}
+      onClick={!disabled ? onClick : null}
     >
       {active && (
         <CheckCircleIcon color="secondary" className={classes.check} />
