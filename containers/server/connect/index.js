@@ -15,6 +15,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  Link,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -30,19 +31,13 @@ import Input from "components/Input";
 import Modal from "components/Modal";
 import Snackbar from "components/Snackbar";
 import useServer from "hooks/server";
+import Image from "next/image";
 
 const requirements = [
   "Your server must be Ubuntu 18.04 or 20.04 (64-bit).",
   "Only clean servers (no Nginx, Apache, or MySQL installed) can be connected to CMS Manajer.",
   "Installed python2.7 or python3.",
   "Minimum of RAM 256MB.",
-];
-
-const data = [
-  { name: "name", label: "Server Name", placeholder: "Example" },
-  { name: "ip", label: "IP Address", placeholder: "104.21.59.111" },
-  { name: "systemUser.username", label: "Username", placeholder: "ubuntu" },
-  { name: "systemUser.password", label: "Password", placeholder: "********" },
 ];
 
 const initialValues = {
@@ -172,6 +167,28 @@ export default function ConnectServer() {
               ))}
             </List>
           </Paper>
+          <Link
+            target="_blank"
+            href="https://panel.niagahoster.co.id/ref/519688"
+          >
+            <img
+              width="100%"
+              src="https://niagaspace.sgp1.cdn.digitaloceanspaces.com/assets/images/affiliasi/banner/affiliate-728-x-90.png"
+              alt="PHP Dev Cloud Hosting"
+              style={{ display: "block", borderRadius: 5, marginTop: 20 }}
+            />
+          </Link>
+          <Link
+            target="_blank"
+            href="https://my.idcloudhost.com/aff.php?aff=7802"
+          >
+            <img
+              width="100%"
+              src="https://idcloudhost.com/wp-content/uploads/2017/01/468x60.png"
+              alt="IDCloudHost | SSD Cloud Hosting Indonesia"
+              style={{ display: "block", borderRadius: 5, marginTop: 10 }}
+            />
+          </Link>
         </Grid>
         <Grid item sm>
           <Paper variant="outlined" className={classes.paper}>
