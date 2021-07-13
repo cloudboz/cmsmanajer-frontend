@@ -3,12 +3,20 @@ import PropTypes from "prop-types";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { QueryClient, QueryClientProvider } from "react-query";
 import theme from "../styles/theme";
-import ComingSoon from "./coming-soon";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { SnackbarProvider } from "notistack";
 import { UserProvider } from "context/auth";
+import ComingSoon from "./coming-soon";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 const paths = [
   "/",
   "/register",
@@ -66,9 +74,15 @@ export default function MyApp({ Component, pageProps, router }) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
-          <UserProvider>
-            <Component {...pageProps} />
-          </UserProvider>
+          <SnackbarProvider
+            maxSnack={3}
+            autoHideDuration={3000}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <UserProvider>
+              <Component {...pageProps} />
+            </UserProvider>
+          </SnackbarProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </React.Fragment>

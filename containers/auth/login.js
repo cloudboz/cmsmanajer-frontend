@@ -6,25 +6,16 @@ import Cookies from "js-cookie";
 import * as yup from "yup";
 
 import Form from "./components/Form";
-import Snackbar from "components/Snackbar";
 import LoginForm from "./components/LoginForm";
 import { useAuthentication } from "hooks/auth";
 import { setToken } from "utils/api";
+import useNotif from "hooks/notif";
 
 export default function Login() {
   const classes = useStyles();
   const router = useRouter();
+  const notif = useNotif();
   const { login } = useAuthentication();
-  const [open, setOpen] = React.useState(false);
-  const [message, setMessage] = React.useState("");
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   const handleSubmit = async (values) => {
     try {
@@ -39,18 +30,19 @@ export default function Login() {
       router.push("/servers");
     } catch (error) {
       console.error(error.response);
+      let message = "";
       switch (error.response.status) {
         case 404:
-          setMessage("You haven't registered to CMS Manajer");
+          message = "You haven't registered to CMS Manajer";
           break;
         case 400:
-          setMessage("The email or password is incorrect. Please try again.");
+          message = "The email or password is incorrect. Please try again.";
           break;
         default:
-          setMessage("Internal server error");
+          message = "Internal server error";
           break;
       }
-      setOpen(true);
+      notif.error(message);
     }
   };
 
@@ -74,12 +66,6 @@ export default function Login() {
           CMS Manajer
         </Typography>
         <LoginForm onSubmit={handleSubmit} isLoading={login.isLoading} />
-        <Snackbar
-          severity="error"
-          message={message}
-          open={open}
-          handleClose={handleClose}
-        />
       </Container>
     </Container>
   );
