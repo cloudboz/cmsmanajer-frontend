@@ -172,6 +172,7 @@ export default function Form({ onSubmit, isLoading }) {
                 <Input
                   name={input.name}
                   placeholder={input.placeholder}
+                  autoFocus={i == 0}
                   {...defaultProps}
                   key={i}
                 />

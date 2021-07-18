@@ -79,6 +79,7 @@ export default function LoginForm({ onSubmit, isLoading }) {
         <Input
           name="email"
           placeholder="e.g. mail@cmsmanajer.com"
+          autoFocus
           {...defaultProps}
         />
 

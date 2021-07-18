@@ -68,7 +68,12 @@ export default function ResetForm({ onSubmit, isLoading }) {
         onSubmit={handleSubmit}
         autoComplete="off"
       >
-        <Input name="password" placeholder="********" {...defaultProps} />
+        <Input
+          name="password"
+          placeholder="********"
+          autoFocus
+          {...defaultProps}
+        />
 
         <Input
           name="password2"
