@@ -9,27 +9,39 @@ import FormUser from "./FormUser";
 import useServer from "hooks/server";
 import { API } from "utils/api";
 
-const schema = yup.object({
-  name: yup.string().required(),
-  type: yup.string().required(),
-  systemUser: yup.object().shape({
-    id: yup.string(),
-    username: yup.string().required(),
-    password: yup.string().min(4).required(),
-    sshKey: yup.string(),
-  }),
-  createUser: yup.boolean().required(),
-});
-
 export default function FormApp({
   name,
   classes,
   server,
   handleSubmit: handleSubmitForm,
 }) {
+  const [createUser, setCreateUser] = React.useState(false);
+  const [sshKey, setSshKey] = React.useState(false);
+
   const { getSysUsersByServer } = useServer();
 
   const { data: users, isLoading } = getSysUsersByServer(server.id);
+
+  const schema = yup.object({
+    name: yup.string().required(),
+    type: yup.string().required(),
+    createUser: yup.boolean().required(),
+    systemUser: yup.object().shape({
+      id: yup.string(),
+      username: yup.string().required(),
+      password: yup
+        .string()
+        .min(4)
+        .when("createUser", (_, schema) => {
+          return createUser && !sshKey
+            ? schema.required()
+            : schema.notRequired();
+        }),
+      sshKey: yup.string().when("createUser", (_, schema) => {
+        return createUser && sshKey ? schema.required() : schema.notRequired();
+      }),
+    }),
+  });
 
   const initialValues = {
     name,
@@ -37,7 +49,8 @@ export default function FormApp({
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
-      password: "nulll",
+      password: "",
+      sshKey: users?.[0].sshKey?.name || "",
     },
     createUser: false,
   };
@@ -61,6 +74,14 @@ export default function FormApp({
     validationSchema: schema,
   });
 
+  const defaultProps = {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
+  };
+
   React.useEffect(() => {
     setFieldValue("name", name);
     setFieldValue("type", name.toLowerCase());
@@ -73,14 +94,14 @@ export default function FormApp({
       <Grid container spacing={2}>
         <Grid item sm={6}>
           <FormUser
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
             classes={classes}
             options={users}
             setFieldValue={setFieldValue}
+            createUser={createUser}
+            setCreateUser={setCreateUser}
+            sshKey={sshKey}
+            setSshKey={setSshKey}
           />
         </Grid>
         <Grid item sm={6}></Grid>

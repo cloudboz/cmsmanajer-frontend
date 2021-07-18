@@ -7,6 +7,7 @@ import {
   Button,
   makeStyles,
   IconButton,
+  CircularProgress,
 } from "@material-ui/core";
 import { VisibilityOutlined, VisibilityOffOutlined } from "@material-ui/icons";
 
@@ -24,6 +25,9 @@ import Detail from "components/Detail";
 
 import useApp from "hooks/app";
 import useDatabase from "hooks/database";
+import useSocket from "hooks/socket";
+import useNotif from "hooks/notif";
+import { useUser } from "context/auth";
 
 const schema = yup.object({
   name: yup.string().required(),
@@ -31,11 +35,14 @@ const schema = yup.object({
   password: yup.string().min(4).required(),
 });
 
-export default function AppDatabases({ app }) {
+export default function AppDatabases({ app, dbs, refetch }) {
   const classes = useStyles();
   const router = useRouter();
+  const socket = useSocket();
+  const notif = useNotif();
+  const { user } = useUser();
   const { getDatabasesByApp } = useApp();
-  const { createDatabase, getDatabaseByID } = useDatabase();
+  const { createDatabase, getDatabaseByID, deleteDatabase } = useDatabase();
 
   const [openCreate, setOpenCreate] = React.useState(false);
   const [openView, setOpenView] = React.useState(false);
@@ -43,15 +50,38 @@ export default function AppDatabases({ app }) {
   const [dbID, setdbID] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const {
-    data: dbs,
-    isLoading: isLoadingDBs,
-    refetch,
-  } = getDatabasesByApp(app.id);
-
   const { data: db, isLoading: isLoadingDB } = getDatabaseByID(dbID);
 
   const { mutateAsync: create, isLoading: isLoadingCreate } = createDatabase;
+  const { mutateAsync: deleteDB, isLoading: isLoadingDelete } = deleteDatabase;
+
+  React.useEffect(() => {
+    if (socket) {
+      socket.on("logs" + user.id + "createdatabase", (data) => {
+        console.log(data);
+      });
+
+      socket.on("done" + user.id + "createdatabase", () => {
+        refetch();
+        notif.success("Database created");
+      });
+
+      socket.on("error" + user.id + "createdatabase", (data) => {
+        refetch();
+        notif.error("Failed to create database. " + data);
+      });
+
+      socket.on("done" + user.id + "deletedatabase", () => {
+        refetch();
+        notif.success("Database deleted");
+      });
+
+      socket.on("error" + user.id + "deletedatabase", (data) => {
+        refetch();
+        notif.error("Failed to delete database. " + data);
+      });
+    }
+  }, [socket]);
 
   const {
     handleSubmit,
@@ -92,32 +122,42 @@ export default function AppDatabases({ app }) {
     if (!isLoadingDB) setOpenView(true);
   };
 
-  const handleGenerate = () => {
-    setFieldValue("username", randomBytes(4).toString("hex"));
-    setFieldValue("password", randomBytes(9).toString("base64"));
+  const handleGenerate = async () => {
+    await setFieldValue("username", randomBytes(4).toString("hex"));
+    await setFieldValue("password", randomBytes(9).toString("base64"));
     setFieldTouched("username", true);
     setFieldTouched("password", true);
   };
 
   const handleSubmitForm = async (values, reset) => {
     try {
-      const data = {
+      const body = {
         ...values,
-        server: {
-          id: app.server.id,
-          ip: app.server.ip,
+        app: {
+          id: app.id,
+          name: app.name,
+          server: {
+            id: app.server.id,
+            ip: app.server.ip,
+          },
+          systemUser: app.systemUser,
         },
-        appId: app.id,
       };
-      console.log(data);
-      await create(data);
+      const { data } = await create(body);
       reset();
       refetch();
       setOpenCreate(false);
     } catch (error) {
       console.log(error.response);
-      alert(error.response.data.message);
+      notif.error(error.response?.data?.message);
     }
+  };
+
+  const handleDelete = async () => {
+    alert("delete?");
+    await deleteDB(db?.id);
+    refetch();
+    setOpenView(false);
   };
 
   const data = [
@@ -145,7 +185,7 @@ export default function AppDatabases({ app }) {
       </Grid>
 
       <ListHeader items={headers} width={width} />
-      {dbs?.map(({ id, name }, i) => (
+      {dbs?.map(({ id, name, status }, i) => (
         <ListItem
           id={id}
           path={undefined}
@@ -153,8 +193,16 @@ export default function AppDatabases({ app }) {
           onClick={() => handleClick(id)}
           renderItem={
             <>
-              <Box style={{ width: width[0] }}>
+              <Box
+                style={{
+                  width: width[0],
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "center",
+                }}
+              >
                 <Typography>{name}</Typography>
+                {status == "loading" && <CircularProgress size="1rem" />}
               </Box>
             </>
           }
@@ -162,6 +210,7 @@ export default function AppDatabases({ app }) {
         />
       ))}
 
+      {/* -------------------- Modal View -------------------- */}
       <Modal size="xs" open={openView} handleClose={handleClose} fullWidth>
         <Typography variant="h5" paragraph>
           {db?.name}
@@ -181,7 +230,7 @@ export default function AppDatabases({ app }) {
                 }}
                 style={{ marginLeft: 10, padding: 0 }}
               >
-                {showPassword ? (
+                {!showPassword ? (
                   <VisibilityOffOutlined
                     style={{
                       fontSize: 18,
@@ -202,13 +251,14 @@ export default function AppDatabases({ app }) {
           variant="outlined"
           className={classes.btnDelete}
           fullWidth
-          // disabled={deleteName != app.name}
-          type="submit"
+          disabled={db?.status == "loading"}
+          onClick={handleDelete}
         >
           Delete database
         </Button>
       </Modal>
 
+      {/* -------------------- Modal Create -------------------- */}
       <Modal size="xs" open={openCreate} handleClose={handleClose}>
         <Typography variant="h5" paragraph>
           Create Database
@@ -225,6 +275,7 @@ export default function AppDatabases({ app }) {
               touched={touched}
               handleBlur={handleBlur}
               handleChange={handleChange}
+              autoFocus={i == 0}
               key={i}
             />
           ))}

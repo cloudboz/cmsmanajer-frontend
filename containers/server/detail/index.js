@@ -16,6 +16,7 @@ import ServerUsers from "./users";
 import ServerSettings from "./settings";
 
 import useServer from "hooks/server";
+import { Loader } from "components/Loader";
 
 export default function DetailServer({ id }) {
   const classes = useStyles();
@@ -34,7 +35,7 @@ export default function DetailServer({ id }) {
   return (
     <Layout>
       {isLoadingServer || isLoadingApps ? (
-        <h1>Loading</h1>
+        <Loader />
       ) : (
         <>
           <Grid container style={{ justifyContent: "space-between" }}>

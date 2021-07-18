@@ -27,6 +27,7 @@ export default function Input({
   required,
   multiline = false,
   rows = 5,
+  autoFocus = false,
 }) {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -55,6 +56,7 @@ export default function Input({
         value={values ? values[name] : value}
         multiline={multiline}
         fullWidth
+        autoFocus={autoFocus}
         rows={rows}
         placeholder={placeholder}
         margin="dense"

@@ -28,10 +28,9 @@ import { useRouter } from "next/router";
 
 import Layout from "components/Layout";
 import Input from "components/Input";
-import Modal from "components/Modal";
-import Snackbar from "components/Snackbar";
 import useServer from "hooks/server";
-import Image from "next/image";
+import Progress from "components/Progress";
+import useNotif from "hooks/notif";
 
 const requirements = [
   "Your server must be Ubuntu 18.04 or 20.04 (64-bit).",
@@ -41,21 +40,39 @@ const requirements = [
 ];
 
 const initialValues = {
-  name: "",
-  ip: "",
+  name: "bismillah",
+  ip: "52.221.255.71",
   webServer: "nginx",
   systemUser: {
-    username: "",
-    password: "",
+    username: "ubuntu",
+    password: "4esz3wa2q",
     sshKey: "",
   },
 };
 
+const steps = [
+  {
+    name: "Update and upgrade security",
+    parts: 3,
+  },
+  {
+    name: "Optimization",
+    parts: 11,
+  },
+  {
+    name: "Finish",
+    parts: 1,
+  },
+];
+
 export default function ConnectServer() {
   const classes = useStyles();
   const router = useRouter();
+  const notif = useNotif();
   const [multiple, setMultiple] = React.useState(false);
   const [sshKey, setSshKey] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [id, setID] = React.useState("");
   const { connectServer: connect } = useServer();
 
   const schema = yup.object({
@@ -84,11 +101,11 @@ export default function ConnectServer() {
 
   const handleSubmitForm = async (values) => {
     try {
-      console.log(values);
-      await connect.mutateAsync(values);
-      router.push("/servers");
+      const { data } = await connect.mutateAsync(values);
+      await setID(data.data.id);
+      setLoading(true);
     } catch (error) {
-      alert(error.response?.data?.message);
+      notif.error(error.response?.data?.message);
     }
   };
 
@@ -135,189 +152,203 @@ export default function ConnectServer() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={5}>
-        <Grid item sm={5}>
-          <Paper variant="outlined" className={classes.paper}>
-            <List style={{ padding: 0 }}>
-              <ListItem
-                className={classes.list}
-                style={{ marginBottom: 15 }}
-                divider
-              >
-                <ListItemText
-                  primary={
-                    <Typography className={classes.bold}>
-                      Requirements
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              {requirements.map((req, i) => (
+      {loading ? (
+        <Progress
+          steps={steps}
+          path="servers"
+          id={id}
+          message={{
+            success: "Server connected",
+            error: "Failed to connect server.",
+          }}
+        />
+      ) : (
+        <Grid container spacing={5}>
+          <Grid item sm={5}>
+            <Paper variant="outlined" className={classes.paper}>
+              <List style={{ padding: 0 }}>
                 <ListItem
-                  key={i}
                   className={classes.list}
-                  alignItems="flex-start"
-                  style={{ marginTop: 5 }}
+                  style={{ marginBottom: 15 }}
+                  divider
                 >
-                  <ListItemAvatar className={classes.avatar}>
-                    <CheckCircleOutlineRoundedIcon color="secondary" />
-                  </ListItemAvatar>
-                  <ListItemText className={classes.list} primary={req} />
+                  <ListItemText
+                    primary={
+                      <Typography className={classes.bold}>
+                        Requirements
+                      </Typography>
+                    }
+                  />
                 </ListItem>
-              ))}
-            </List>
-          </Paper>
-          <Link
-            target="_blank"
-            href="https://panel.niagahoster.co.id/ref/519688"
-          >
-            <img
-              width="100%"
-              src="https://niagaspace.sgp1.cdn.digitaloceanspaces.com/assets/images/affiliasi/banner/affiliate-728-x-90.png"
-              alt="PHP Dev Cloud Hosting"
-              style={{ display: "block", borderRadius: 5, marginTop: 20 }}
-            />
-          </Link>
-          <Link
-            target="_blank"
-            href="https://my.idcloudhost.com/aff.php?aff=7802"
-          >
-            <img
-              width="100%"
-              src="https://idcloudhost.com/wp-content/uploads/2017/01/468x60.png"
-              alt="IDCloudHost | SSD Cloud Hosting Indonesia"
-              style={{ display: "block", borderRadius: 5, marginTop: 10 }}
-            />
-          </Link>
-        </Grid>
-        <Grid item sm>
-          <Paper variant="outlined" className={classes.paper}>
-            <form noValidate onSubmit={handleSubmit} autoComplete="off">
-              <Typography variant="subtitle2">I’d prefer to use</Typography>
-              <Box className={classes.stackWrapper}>
-                <Stack
-                  name="Nginx"
-                  value="nginx"
-                  icon={<img src="/nginx.svg" className={classes.icon} />}
-                  values={values}
-                  setFieldValue={setFieldValue}
-                />
-                <Stack
-                  name="Apache"
-                  value="apache"
-                  icon={<img src="/apache.svg" className={classes.icon} />}
-                  values={values}
-                  setFieldValue={setFieldValue}
-                />
-                <Stack
-                  name="I'll choose later"
-                  value={null}
-                  icon={
-                    <WatchLaterRoundedIcon
-                      color="primary"
-                      style={{ fontSize: 32 }}
-                    />
-                  }
-                  values={values}
-                  setFieldValue={setFieldValue}
-                />
-              </Box>
-
-              <Input
-                name="name"
-                label="Server Name"
-                placeholder="e.g. Example"
-                {...defaultProps}
+                {requirements.map((req, i) => (
+                  <ListItem
+                    key={i}
+                    className={classes.list}
+                    alignItems="flex-start"
+                    style={{ marginTop: 5 }}
+                  >
+                    <ListItemAvatar className={classes.avatar}>
+                      <CheckCircleOutlineRoundedIcon color="secondary" />
+                    </ListItemAvatar>
+                    <ListItemText className={classes.list} primary={req} />
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+            <Link
+              target="_blank"
+              href="https://panel.niagahoster.co.id/ref/519688"
+            >
+              <img
+                width="100%"
+                src="https://niagaspace.sgp1.cdn.digitaloceanspaces.com/assets/images/affiliasi/banner/affiliate-728-x-90.png"
+                alt="PHP Dev Cloud Hosting"
+                style={{ display: "block", borderRadius: 5, marginTop: 20 }}
               />
-
-              <FormControlLabel
-                label={
-                  <Typography variant="subtitle1">
-                    Add multiple server
-                  </Typography>
-                }
-                control={
-                  <Checkbox
-                    checked={multiple}
-                    onChange={() => setMultiple(!multiple)}
-                    color="secondary"
+            </Link>
+            <Link
+              target="_blank"
+              href="https://my.idcloudhost.com/aff.php?aff=7802"
+            >
+              <img
+                width="100%"
+                src="https://idcloudhost.com/wp-content/uploads/2017/01/468x60.png"
+                alt="IDCloudHost | SSD Cloud Hosting Indonesia"
+                style={{ display: "block", borderRadius: 5, marginTop: 10 }}
+              />
+            </Link>
+          </Grid>
+          <Grid item sm>
+            <Paper variant="outlined" className={classes.paper}>
+              <form noValidate onSubmit={handleSubmit} autoComplete="off">
+                <Typography variant="subtitle2">I’d prefer to use</Typography>
+                <Box className={classes.stackWrapper}>
+                  <Stack
+                    name="Nginx"
+                    value="nginx"
+                    icon={<img src="/nginx.svg" className={classes.icon} />}
+                    values={values}
+                    setFieldValue={setFieldValue}
                   />
-                }
-              />
-              {multiple && (
-                <Alert severity="warning">
-                  <Typography variant="subtitle2">
-                    Username and password must be same
-                  </Typography>
-                </Alert>
-              )}
-              <Input
-                name="ip"
-                label="IP Address"
-                multiline={multiple}
-                placeholder={
-                  multiple
-                    ? `e.g. 104.21.59.111
-104.21.59.112`
-                    : "e.g. 104.21.59.111"
-                }
-                rows={2}
-                {...defaultProps}
-              />
-
-              <Input
-                name="systemUser.username"
-                label="Username"
-                placeholder="e.g. Example"
-                {...defaultProps}
-              />
-
-              <FormControlLabel
-                label={<Typography variant="subtitle1">Use SSH Key</Typography>}
-                control={
-                  <Checkbox
-                    checked={sshKey}
-                    onChange={() => setSshKey(!sshKey)}
-                    color="secondary"
+                  <Stack
+                    name="Apache"
+                    value="apache"
+                    icon={<img src="/apache.svg" className={classes.icon} />}
+                    values={values}
+                    setFieldValue={setFieldValue}
                   />
-                }
-              />
-              {!sshKey && (
+                  <Stack
+                    name="I'll choose later"
+                    value={""}
+                    icon={
+                      <WatchLaterRoundedIcon
+                        color="primary"
+                        style={{ fontSize: 32 }}
+                      />
+                    }
+                    values={values}
+                    setFieldValue={setFieldValue}
+                  />
+                </Box>
+
                 <Input
-                  name="systemUser.password"
-                  label="Password"
-                  placeholder="e.g. *********"
+                  name="name"
+                  label="Server Name"
+                  placeholder="e.g. Example"
                   {...defaultProps}
                 />
-              )}
-              {sshKey && (
+
+                <FormControlLabel
+                  label={
+                    <Typography variant="subtitle1">
+                      Add multiple server
+                    </Typography>
+                  }
+                  control={
+                    <Checkbox
+                      checked={multiple}
+                      onChange={() => setMultiple(!multiple)}
+                      color="secondary"
+                    />
+                  }
+                />
+                {multiple && (
+                  <Alert severity="warning">
+                    <Typography variant="subtitle2">
+                      Username and password must be same
+                    </Typography>
+                  </Alert>
+                )}
                 <Input
-                  name="systemUser.sshKey"
-                  label="Private Key"
-                  placeholder={`e.g. -----BEGIN RSA PRIVATE KEY-----
+                  name="ip"
+                  label="IP Address"
+                  multiline={multiple}
+                  placeholder={
+                    multiple
+                      ? `e.g. 104.21.59.111
+104.21.59.112`
+                      : "e.g. 104.21.59.111"
+                  }
+                  rows={2}
+                  {...defaultProps}
+                />
+
+                <Input
+                  name="systemUser.username"
+                  label="Username"
+                  placeholder="e.g. Example"
+                  {...defaultProps}
+                />
+
+                <FormControlLabel
+                  label={
+                    <Typography variant="subtitle1">Use SSH Key</Typography>
+                  }
+                  control={
+                    <Checkbox
+                      checked={sshKey}
+                      onChange={() => setSshKey(!sshKey)}
+                      color="secondary"
+                    />
+                  }
+                />
+                {!sshKey && (
+                  <Input
+                    name="systemUser.password"
+                    label="Password"
+                    placeholder="e.g. *********"
+                    {...defaultProps}
+                  />
+                )}
+                {sshKey && (
+                  <Input
+                    name="systemUser.sshKey"
+                    label="Private Key"
+                    placeholder={`e.g. -----BEGIN RSA PRIVATE KEY-----
 L8AsOpF9j2OvMPppF2ZvGIw2mJZp6EIFUoOzSUv9G5zZ90rTVtvu0Fi
 ...
 -----END RSA PRIVATE KEY-----`}
-                  multiline
-                  rows={5}
-                  {...defaultProps}
-                />
-              )}
+                    multiline
+                    rows={5}
+                    {...defaultProps}
+                  />
+                )}
 
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                style={{ marginTop: "25px", marginBottom: "3px" }}
-                disabled={!dirty || !isValid || connect.isLoading}
-                type="submit"
-              >
-                Connect
-              </Button>
-            </form>
-          </Paper>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  style={{ marginTop: "25px", marginBottom: "3px" }}
+                  disabled={!dirty || !isValid || connect.isLoading}
+                  type="submit"
+                >
+                  Connect
+                </Button>
+              </form>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Layout>
   );
 }

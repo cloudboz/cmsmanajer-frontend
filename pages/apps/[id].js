@@ -1,6 +1,7 @@
 import DetailApp from "containers/app/detail";
+import withAuth from "components/withAuth";
 
-export default DetailApp;
+export default withAuth(DetailApp);
 
 export const getServerSideProps = async ({ query }) => {
   try {

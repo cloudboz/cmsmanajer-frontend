@@ -14,19 +14,6 @@ import Select from "components/Select";
 import FormUser from "./FormUser";
 import useServer from "hooks/server";
 
-const schema = yup.object({
-  name: yup.string().required(),
-  type: yup.string().required(),
-  domain: yup.string().required(),
-  systemUser: yup.object().shape({
-    id: yup.string(),
-    username: yup.string().required(),
-    password: yup.string().min(4).required(),
-    sshKey: yup.string(),
-  }),
-  createUser: yup.boolean().required(),
-});
-
 export default function FormWeb({
   name,
   classes,
@@ -34,19 +21,43 @@ export default function FormWeb({
   stack,
   handleSubmit: handleSubmitForm,
 }) {
+  const [createUser, setCreateUser] = React.useState(false);
+  const [sshKey, setSshKey] = React.useState(false);
+
   const { getSysUsersByServer } = useServer();
 
   const { data: users, isLoading } = getSysUsersByServer(server.id);
+  const schema = yup.object({
+    name: yup.string().required(),
+    type: yup.string().required(),
+    domain: yup.string().required(),
+    createUser: yup.boolean().required(),
+    systemUser: yup.object().shape({
+      id: yup.string(),
+      username: yup.string().required(),
+      password: yup
+        .string()
+        .min(4)
+        .when("createUser", (_, schema) => {
+          return createUser && !sshKey
+            ? schema.required()
+            : schema.notRequired();
+        }),
+      sshKey: yup.string().when("createUser", (_, schema) => {
+        return createUser && sshKey ? schema.required() : schema.notRequired();
+      }),
+    }),
+  });
 
   const initialValues = {
     name,
     type: stack,
     domain: "",
-
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
-      password: "nulll",
+      password: "",
+      sshKey: users?.[0].sshKey?.name || "",
     },
     createUser: false,
   };
@@ -70,6 +81,14 @@ export default function FormWeb({
     validationSchema: schema,
   });
 
+  const defaultProps = {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
+  };
+
   React.useEffect(() => {
     setFieldValue("name", name);
     setFieldValue("type", stack);
@@ -86,11 +105,7 @@ export default function FormWeb({
             label="Name"
             className={classes.form}
             placeholder="e.g. My Web"
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
           />
 
           <Input
@@ -98,22 +113,18 @@ export default function FormWeb({
             label="Domain"
             className={classes.form}
             placeholder="e.g. sub.domain.com"
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
           />
 
           <FormUser
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
             classes={classes}
             options={users}
             setFieldValue={setFieldValue}
+            createUser={createUser}
+            setCreateUser={setCreateUser}
+            sshKey={sshKey}
+            setSshKey={setSshKey}
           />
         </Grid>
         <Grid item sm={6}></Grid>

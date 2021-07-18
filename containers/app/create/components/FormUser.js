@@ -1,5 +1,10 @@
 import React from "react";
-import { makeStyles, FormControlLabel } from "@material-ui/core";
+import {
+  makeStyles,
+  FormControlLabel,
+  Typography,
+  Checkbox,
+} from "@material-ui/core";
 
 import Input from "components/Input";
 import Select from "components/Select";
@@ -19,11 +24,21 @@ export default function FormUser({
   handleChange,
   classes,
   setFieldValue,
+  createUser,
+  setCreateUser,
+  sshKey,
+  setSshKey,
 }) {
-  const [createUser, setCreateUser] = React.useState(values.createUser);
-
   const handleCreateUser = async () => {
     setCreateUser(!createUser);
+  };
+
+  const defaultProps = {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
   };
 
   const emptyValues = {
@@ -31,7 +46,7 @@ export default function FormUser({
       id: "",
       username: "",
       password: "",
-      sshKeyId: "",
+      sshKey: "",
     },
   };
 
@@ -43,11 +58,17 @@ export default function FormUser({
       await setFieldValue("systemUser", {
         id: options[0].id,
         username: options[0].username,
-        password: "null",
+        password: "",
+        sshKey: options[0].sshKey?.name || "",
       });
       setFieldValue("createUser", createUser);
     }
   }, [createUser]);
+
+  React.useEffect(() => {
+    setFieldValue("systemUser.password", "");
+    setFieldValue("systemUser.sshKey", "");
+  }, [sshKey]);
 
   return (
     <>
@@ -63,21 +84,43 @@ export default function FormUser({
       />
       {createUser ? (
         <>
-          {data.map((input, i) => (
+          <Input
+            name="systemUser.username"
+            label="Username"
+            placeholder="e.g. ubuntu"
+            {...defaultProps}
+          />
+          <FormControlLabel
+            label={<Typography variant="subtitle1">Use SSH Key</Typography>}
+            control={
+              <Checkbox
+                checked={sshKey}
+                onChange={() => setSshKey(!sshKey)}
+                color="secondary"
+              />
+            }
+          />
+          {!sshKey && (
             <Input
-              name={input.name}
-              label={input.label}
-              className={classes.form}
-              placeholder={input.placeholder}
-              values={values}
-              errors={errors}
-              touched={touched}
-              handleBlur={handleBlur}
-              handleChange={handleChange}
-              required
-              key={i}
+              name="systemUser.password"
+              label="Password"
+              placeholder="e.g. *********"
+              {...defaultProps}
             />
-          ))}
+          )}
+          {sshKey && (
+            <Input
+              name="systemUser.sshKey"
+              label="Private Key"
+              placeholder={`e.g. -----BEGIN RSA PRIVATE KEY-----
+L8AsOpF9j2OvMPppF2ZvGIw2mJZp6EIFUoOzSUv9G5zZ90rTVtvu0Fi
+...
+-----END RSA PRIVATE KEY-----`}
+              multiline
+              rows={5}
+              {...defaultProps}
+            />
+          )}
         </>
       ) : (
         <Select
@@ -93,10 +136,11 @@ export default function FormUser({
           handleBlur={handleBlur}
           handleChange={(e) => {
             const { id, username, sshKey = {} } = e.target.value;
+
             setFieldValue("systemUser", {
               id,
               username,
-              password: "null",
+              password: "",
               sshKey: sshKey.name,
             });
           }}

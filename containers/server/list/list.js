@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -5,13 +6,35 @@ import {
   Grid,
   Button,
   makeStyles,
+  useTheme,
 } from "@material-ui/core";
 
 import ListHeader from "components/ListHeader";
 import ListItem from "components/ListItem";
 
-export default function ListServer({ servers }) {
+export default function ListServer({ servers, getStatus }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const [stats, setStatus] = useState([]);
+
+  const hosts = servers.map((s) => s.ip);
+
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      const { data } = await getStatus({ hosts });
+      setStatus(data.data);
+    }, 3000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  const color = {
+    failed: theme.palette.common.red,
+    loading: theme.palette.divider,
+    healthy: theme.palette.common.green,
+  };
 
   const headers = ["NAME", "IP", "WEB SERVER", "APPS"];
   const width = ["35%", "25%", "30%", "10%"];
@@ -19,10 +42,16 @@ export default function ListServer({ servers }) {
   return (
     <Container disableGutters className={classes.center}>
       <ListHeader items={headers} width={width} />
-      {servers?.map(({ id, name, ip, webServer, apps }, i) => (
+      {servers?.map(({ id, name, ip, webServer, apps, status }, i) => (
         <ListItem
           id={id}
-          status="#32D69F"
+          status={
+            status == "loading" || !stats.length
+              ? color.loading
+              : stats[i].isAlive
+              ? color.healthy
+              : color.failed
+          }
           path="/servers"
           renderItem={
             <>
@@ -32,7 +61,15 @@ export default function ListServer({ servers }) {
               <Box style={{ width: width[1] }}>
                 <Typography>{ip.replace("\n", "; ")}</Typography>
               </Box>
-              <Box style={{ width: width[2] }}>
+              <Box
+                style={{
+                  width: width[2],
+                  display: "flex",
+                  gap: 5,
+                  alignItems: "center",
+                }}
+              >
+                <img src={`/${webServer}.svg`} height={24} />
                 <Typography>{webServer || "-"}</Typography>
               </Box>
               <Box style={{ width: width[3] }}>

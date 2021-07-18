@@ -9,6 +9,7 @@ export function useUser() {
 export function UserProvider(props) {
   // state
   const [user, setUser] = useState({ name: "dummy" });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const { children } = props;
   return (
@@ -16,6 +17,8 @@ export function UserProvider(props) {
       value={{
         user,
         setUser,
+        isLoggedIn,
+        setIsLoggedIn,
       }}
     >
       {children}

@@ -1,3 +1,4 @@
 import Server from "../../containers/server/list";
+import withAuth from "components/withAuth";
 
-export default Server;
+export default withAuth(Server);

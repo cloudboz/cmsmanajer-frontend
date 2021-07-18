@@ -18,10 +18,13 @@ import useApp from "hooks/app";
 import useSysUser from "hooks/systemUser";
 import { useRouter } from "next/router";
 import Select from "components/Select";
+import Progress from "components/Progress";
+import useNotif from "hooks/notif";
 
 export default function CreateApp({ user }) {
   const classes = useStyles();
   const router = useRouter();
+  const notif = useNotif();
   const { getServers, editServer: edit } = useServer();
   const { createApp: create } = useApp();
   const [type, setType] = React.useState("");
@@ -30,10 +33,16 @@ export default function CreateApp({ user }) {
   const [index, setIndex] = React.useState(0);
   const [server, setServer] = React.useState({});
 
+  const [loading, setLoading] = React.useState(false);
+  const [res, setRes] = React.useState({});
+
   const { data: servers, isLoading, refetch } = getServers();
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
+    const id = localStorage.getItem("serverId") || undefined;
+    if (id) await setIndex(servers?.findIndex((s) => s.id == id));
     setServer(servers?.[index] || {});
+    localStorage.removeItem("serverId");
   }, [servers]);
 
   const handleClick =
@@ -50,10 +59,12 @@ export default function CreateApp({ user }) {
         ...values,
         server,
       };
-      console.log(body);
-      await create.mutateAsync(body);
-      router.push("/apps");
-    } catch (error) {}
+      const { data } = await create.mutateAsync(body);
+      await setRes({ id: data.data.id, type: data.data.type });
+      setLoading(true);
+    } catch (error) {
+      notif.error(error.response?.data?.message);
+    }
   };
 
   const handleChangeWebServer = async (value) => {
@@ -69,93 +80,109 @@ export default function CreateApp({ user }) {
     if (server[app.name.toLowerCase()]) return true;
     if (
       (app.name == "Apache" || app.name == "LAMP") &&
-      server.webServer != "apache"
+      server.webServer == "nginx"
     )
       return true;
     else if (
       (app.name == "Nginx" || app.name == "LEMP") &&
-      server.webServer != "nginx"
+      server.webServer == "apache"
     )
       return true;
+    else if (server.webServer == "" && app.name == "WordPress") return true;
     return false;
   };
 
-  return isLoading ? (
-    <></>
-  ) : (
+  return (
     <Layout>
       <Typography variant="h4" paragraph>
         Create App
       </Typography>
 
-      <Paper variant="outlined" style={{ padding: 30, marginBottom: 10 }}>
-        <Box style={{ marginBottom: 20 }}>
-          <Grid container spacing={2}>
-            <Grid item sm={6}>
-              <Select
-                name="server"
-                label="Server"
-                placeholder="Choose server..."
-                value={server}
-                handleChange={(e) => {
-                  setServer(e.target.value);
-                  setIndex(servers.findIndex((s) => s == e.target.value));
-                }}
-                options={servers}
-                renderOption="name"
-              />
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* <Paper variant="outlined" style={{ padding: 30 }}> */}
-        <Box className={classes.root}>
-          {listApp.map((app, i) => (
-            <Item
-              name={app.name}
-              icon={app.icon}
-              key={i}
-              onClick={handleClick(app)}
-              active={app.name == name}
-              disabled={validate(app, server)}
-            />
-          ))}
-        </Box>
-        {server.webServer == "nginx" && !server.nginx && (
-          <Typography variant="subtitle2" style={{ marginTop: 10 }}>
-            You are currently using Nginx.{" "}
-            <Link
-              color="inherit"
-              className={classes.link}
-              onClick={() => handleChangeWebServer("apache")}
-            >
-              Switch to Apache
-            </Link>
-          </Typography>
-        )}
-        {server.webServer == "apache" && !server.apache && (
-          <Typography variant="subtitle2" style={{ marginTop: 10 }}>
-            You are currently using Apache.{" "}
-            <Link
-              color="inherit"
-              className={classes.link}
-              onClick={() => handleChangeWebServer("nginx")}
-            >
-              Switch to Nginx
-            </Link>
-          </Typography>
-        )}
-      </Paper>
-      <Box>
-        <Form
-          classes={classes}
-          server={server}
-          name={name}
-          type={type}
-          stack={stack}
-          handleSubmit={handleSubmit}
+      {loading ? (
+        <Progress
+          steps={steps[res.type]}
+          path="apps"
+          id={res.id}
+          message={{ success: "App created", error: "Failed to create app." }}
         />
-      </Box>
+      ) : (
+        <Box>
+          <Paper variant="outlined" style={{ padding: 30, marginBottom: 10 }}>
+            <Box style={{ marginBottom: 20 }}>
+              <Grid container spacing={2}>
+                <Grid item sm={6}>
+                  <Select
+                    name="server"
+                    label="Server"
+                    placeholder="Choose server..."
+                    value={server}
+                    handleChange={(e) => {
+                      setServer(e.target.value);
+                      setIndex(servers.findIndex((s) => s == e.target.value));
+                    }}
+                    options={servers || []}
+                    renderOption="name"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+
+            {/* <Paper variant="outlined" style={{ padding: 30 }}> */}
+            <Box className={classes.root}>
+              {listApp.map((app, i) => (
+                <Item
+                  name={app.name}
+                  icon={app.icon}
+                  key={i}
+                  onClick={handleClick(app)}
+                  active={app.name == name}
+                  disabled={validate(app, server)}
+                />
+              ))}
+            </Box>
+            {server.webServer == "nginx" && !server.nginx && (
+              <Typography variant="subtitle2" style={{ marginTop: 10 }}>
+                You are currently using Nginx.{" "}
+                <Link
+                  color="inherit"
+                  className={classes.link}
+                  onClick={() => handleChangeWebServer("apache")}
+                >
+                  Switch to Apache
+                </Link>
+              </Typography>
+            )}
+            {server.webServer == "apache" && !server.apache && (
+              <Typography variant="subtitle2" style={{ marginTop: 10 }}>
+                You are currently using Apache.{" "}
+                <Link
+                  color="inherit"
+                  className={classes.link}
+                  onClick={() => handleChangeWebServer("nginx")}
+                >
+                  Switch to Nginx
+                </Link>
+              </Typography>
+            )}
+            {server.webServer == "" && (
+              <Typography variant="subtitle2" style={{ marginTop: 10 }}>
+                You have to install web server (Apache or Nginx) before
+                installing WordPress.
+              </Typography>
+            )}
+          </Paper>
+          <Box>
+            <Form
+              classes={classes}
+              server={server}
+              name={name}
+              type={type}
+              stack={stack}
+              handleSubmit={handleSubmit}
+            />
+          </Box>
+        </Box>
+      )}
     </Layout>
   );
 }
@@ -249,3 +276,96 @@ const listApp = [
     stack: "lamp",
   },
 ];
+
+const steps = {
+  docker: [
+    {
+      name: "Installing app",
+      parts: 8,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  mysql: [
+    {
+      name: "Installing app",
+      parts: 7,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  mongodb: [
+    {
+      name: "Installing app",
+      parts: 6,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  apache: [
+    {
+      name: "Installing app",
+      parts: 1,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  nginx: [
+    {
+      name: "Installing app",
+      parts: 1,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  lamp: [
+    {
+      name: "Installing app",
+      parts: 18,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  lemp: [
+    {
+      name: "Installing app",
+      parts: 18,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  "wp-lamp": [
+    {
+      name: "Installing app",
+      parts: 18,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+  "wp-lemp": [
+    {
+      name: "Installing app",
+      parts: 18,
+    },
+    {
+      name: "Finish",
+      parts: 1,
+    },
+  ],
+};

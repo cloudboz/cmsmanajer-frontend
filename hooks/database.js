@@ -20,7 +20,7 @@ const useDatabase = () => {
 
   const createDatabase = useMutation((body) => API.post("/databases", body));
 
-  const deleteDatabase = useMutation((id) => API.delete("/databases/", id));
+  const deleteDatabase = useMutation((id) => API.delete("/databases/" + id));
 
   return {
     getDatabases,

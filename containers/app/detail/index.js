@@ -16,20 +16,31 @@ import AppSettings from "./settings";
 
 import useServer from "hooks/server";
 import useApp from "hooks/app";
+import { Loader } from "components/Loader";
 
 export default function DetailApp({ id }) {
   const classes = useStyles();
   const router = useRouter();
   const { getAppByID } = useApp();
 
-  const { data: app, isLoading: isLoadingServer, refetch } = getAppByID(id);
+  const {
+    data: app,
+    isLoading: isLoadingServer,
+    isError,
+    refetch,
+  } = getAppByID(id, {
+    onError: () => router.replace("/apps"),
+  });
 
   const tabsItem = ["Databases", "Settings"];
+  const disableDb = ["docker", "mongodb"];
 
   return (
     <Layout>
       {isLoadingServer ? (
-        <h1>Loading</h1>
+        <Loader />
+      ) : isError ? (
+        <h1>not found</h1>
       ) : (
         <>
           <Grid container style={{ justifyContent: "space-between" }}>
@@ -50,15 +61,21 @@ export default function DetailApp({ id }) {
 
                 <Grid item>
                   <Typography variant="body1" paragraph>
-                    Type: {app.type}
+                    Type: {app.type.includes("wp") ? "wordpress" : app.type}
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
 
-          <Tabs items={tabsItem}>
-            <AppDatabases app={app} />
+          <Tabs
+            items={tabsItem}
+            disabled={disableDb.includes(app.type) ? [0] : []}
+            defaultIndex={0}
+          >
+            {!disableDb.includes(app.type) && (
+              <AppDatabases app={app} dbs={app.databases} refetch={refetch} />
+            )}
             <AppSettings app={app} refetch={refetch} />
           </Tabs>
         </>

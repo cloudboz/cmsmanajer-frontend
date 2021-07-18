@@ -23,43 +23,56 @@ const wordpress = [
   },
 ];
 
-const schema = yup.object({
-  name: yup.string().required(),
-  domain: yup.string().required(),
-  type: yup.string().required(),
-  systemUser: yup.object().shape({
-    id: yup.string(),
-    username: yup.string().required(),
-    password: yup.string().min(4).required(),
-    sshKey: yup.string(),
-  }),
-  wordpress: yup.object().shape({
-    title: yup.string().required(),
-    username: yup.string().required(),
-    password: yup.string().required(),
-    email: yup.string().email().required(),
-  }),
-  createUser: yup.boolean().required(),
-});
-
 export default function FormWP({
   name,
   classes,
   server,
   handleSubmit: handleSubmitForm,
 }) {
+  const [createUser, setCreateUser] = React.useState(false);
+  const [sshKey, setSshKey] = React.useState(false);
+
   const { getSysUsersByServer } = useServer();
 
   const { data: users, isLoading } = getSysUsersByServer(server.id);
 
+  const schema = yup.object({
+    name: yup.string().required(),
+    domain: yup.string().required(),
+    type: yup.string().required(),
+    createUser: yup.boolean().required(),
+    systemUser: yup.object().shape({
+      id: yup.string(),
+      username: yup.string().required(),
+      password: yup
+        .string()
+        .min(4)
+        .when("createUser", (_, schema) => {
+          return createUser && !sshKey
+            ? schema.required()
+            : schema.notRequired();
+        }),
+      sshKey: yup.string().when("createUser", (_, schema) => {
+        return createUser && sshKey ? schema.required() : schema.notRequired();
+      }),
+    }),
+    wordpress: yup.object().shape({
+      title: yup.string().required(),
+      username: yup.string().required(),
+      password: yup.string().required(),
+      email: yup.string().email().required(),
+    }),
+  });
+
   const initialValues = {
     name: "",
     domain: "",
-    type: "wordpress",
+    type: server.webServer == "nginx" ? "wp-lemp" : "wp-lamp",
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
-      password: "nulll",
+      password: "",
+      sshKey: users?.[0].sshKey?.name || "",
     },
     wordpress: {
       title: "",
@@ -89,6 +102,14 @@ export default function FormWP({
     validationSchema: schema,
   });
 
+  const defaultProps = {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
+  };
+
   return isLoading ? (
     <h1>Loading</h1>
   ) : (
@@ -100,11 +121,7 @@ export default function FormWP({
             label="Name"
             className={classes.form}
             placeholder="e.g. My App"
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
           />
 
           <Input
@@ -112,22 +129,18 @@ export default function FormWP({
             label="Domain"
             className={classes.form}
             placeholder="e.g. sub.domain.com"
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
           />
 
           <FormUser
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
             classes={classes}
             options={users}
             setFieldValue={setFieldValue}
+            createUser={createUser}
+            setCreateUser={setCreateUser}
+            sshKey={sshKey}
+            setSshKey={setSshKey}
           />
         </Grid>
         <Grid item sm={6}>
@@ -137,11 +150,7 @@ export default function FormWP({
               label={wp.label}
               className={classes.form}
               placeholder={wp.placeholder}
-              values={values}
-              errors={errors}
-              touched={touched}
-              handleBlur={handleBlur}
-              handleChange={handleChange}
+              {...defaultProps}
               key={i}
             />
           ))}

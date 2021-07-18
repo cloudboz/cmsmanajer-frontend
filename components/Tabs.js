@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Tabs, Tab } from "@material-ui/core";
+import { Box, Tabs, Tab, Tooltip } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 function TabPanel(props) {
@@ -18,8 +18,13 @@ function TabPanel(props) {
   );
 }
 
-export default function DetailTabs({ items, children }) {
-  const [tabIndex, setTabIndex] = React.useState(0);
+export default function DetailTabs({
+  items,
+  disabled = [],
+  defaultIndex = 0,
+  children,
+}) {
+  const [tabIndex, setTabIndex] = React.useState(defaultIndex);
   const tabsStyles = useTabsStyles();
   const tabItemStyles = useTabItemStyles();
 
@@ -30,9 +35,26 @@ export default function DetailTabs({ items, children }) {
         value={tabIndex}
         onChange={(e, index) => setTabIndex(index)}
       >
-        {items.map((item, i) => (
-          <Tab classes={tabItemStyles} disableRipple label={item} key={i} />
-        ))}
+        {items.map((item, i) =>
+          disabled.includes(i) ? (
+            <Tooltip
+              title="This feature isn't available yet"
+              placement="bottom"
+            >
+              <span>
+                <Tab
+                  classes={tabItemStyles}
+                  disabled
+                  disableRipple
+                  label={item}
+                  key={i}
+                />
+              </span>
+            </Tooltip>
+          ) : (
+            <Tab classes={tabItemStyles} disableRipple label={item} key={i} />
+          )
+        )}
       </Tabs>
       {children.map((child, i) => (
         <TabPanel value={tabIndex} index={i} key={i}>

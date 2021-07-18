@@ -7,7 +7,7 @@ export default function Section({ name, children }) {
   return (
     <Grid container spacing={3}>
       <Grid item sm={4} className={classes.name}>
-        <Typography variant="h6" paragraph>
+        <Typography variant="h6" paragraph style={{ marginTop: 35 }}>
           {name}
         </Typography>
       </Grid>

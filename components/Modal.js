@@ -13,8 +13,11 @@ import CloseIcon from "@material-ui/icons/Close";
 const useStyles = makeStyles((theme) => ({
   modal: {},
   paper: {
-    padding: 35,
+    padding: "30px 30px",
     borderRadius: 50,
+    "&:first-child": {
+      padding: "25px 30px",
+    },
   },
   closeButton: {
     position: "absolute",

@@ -8,11 +8,17 @@ const useApp = () => {
       return data.data;
     });
 
-  const getAppByID = (id) =>
-    useQuery("app", async () => {
-      const { data } = await API.get("/apps/" + id);
-      return data.data;
-    });
+  const getAppByID = (id, options = {}) =>
+    useQuery(
+      "app",
+      async () => {
+        const { data } = await API.get("/apps/" + id);
+        return data.data;
+      },
+      {
+        onError: options.onError,
+      }
+    );
 
   const getDatabasesByApp = (id) =>
     useQuery("appUsers", async () => {

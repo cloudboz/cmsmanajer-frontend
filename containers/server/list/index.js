@@ -7,7 +7,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 
 import Layout from "components/Layout";
@@ -15,6 +15,7 @@ import ListServer from "./list";
 import EmptyServer from "./empty";
 
 import useServer from "hooks/server";
+import { Loader } from "components/Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,9 +38,16 @@ const useStyles = makeStyles((theme) => ({
 export default function Server() {
   const classes = useStyles();
   const router = useRouter();
-  const { getServers } = useServer();
+  const { getServers, statusServer } = useServer();
 
-  const { data: servers, isLoading } = getServers();
+  const { data: servers, isLoading, isError, error } = getServers();
+  const { mutateAsync: getStatus } = statusServer;
+
+  useEffect(() => {
+    if (isError) {
+      console.log(error);
+    }
+  }, [isError]);
 
   return (
     <Layout>
@@ -61,10 +69,12 @@ export default function Server() {
       </Grid>
       {isLoading ? (
         <>
-          <h1>Loading</h1>
+          <Loader />
         </>
+      ) : isError ? (
+        <h1>ERROR</h1>
       ) : servers?.length ? (
-        <ListServer servers={servers} />
+        <ListServer servers={servers} getStatus={getStatus} />
       ) : (
         <EmptyServer />
       )}

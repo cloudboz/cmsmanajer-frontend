@@ -17,10 +17,12 @@ import Modal from "components/Modal";
 import Section from "components/Section";
 import Detail from "components/Detail";
 import useApp from "hooks/app";
+import useNotif from "hooks/notif";
 
 export default function AppSettings({ app, refetch }) {
   const classes = useStyles();
   const router = useRouter();
+  const notif = useNotif();
   const { deleteApp, updateApp: edit } = useApp();
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(app.name);
@@ -45,12 +47,13 @@ export default function AppSettings({ app, refetch }) {
     }
   };
 
-  const handleDelete = async (values) => {
+  const handleDelete = async (e) => {
     try {
-      await deleteApp(app.id);
+      e.preventDefault();
+      await deleteApp.mutateAsync(app.id);
       router.push("/apps");
     } catch (error) {
-      console.log(error.response);
+      notif.error(error.response?.data?.message);
     }
   };
 
@@ -93,8 +96,11 @@ export default function AppSettings({ app, refetch }) {
 
         <Detail label="Server" value={app.server.name} />
         <Detail label="Domain" value={app.domain || "-"} />
+        {app.type == "lemp" && (
+          <Detail label="Path" value={"/var/www/" + app.domain + ".conf"} />
+        )}
         <Detail label="Type" value={app.type} />
-        <Detail label="Databases" value={app.databases || 0} />
+        <Detail label="Databases" value={app.databases.length || 0} />
         <Detail label="System User" value={app.systemUser.username} />
       </Section>
 

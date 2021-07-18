@@ -5,6 +5,7 @@ import {
   Typography,
   Grid,
   Button,
+  CircularProgress,
   makeStyles,
 } from "@material-ui/core";
 import { useRouter } from "next/router";
@@ -18,6 +19,7 @@ import ListItem from "components/ListItem";
 
 import useSysUser from "hooks/systemUser";
 import useServer from "hooks/server";
+import useSocket from "hooks/socket";
 
 const schema = yup.object({
   username: yup.string().required(),
@@ -27,7 +29,10 @@ const schema = yup.object({
 export default function ServerUsers({ server }) {
   const classes = useStyles();
   const router = useRouter();
+  const socket = useSocket();
   const [open, setOpen] = React.useState(false);
+  const [id, setID] = React.useState("");
+
   const { getSysUsersByServer } = useServer();
   const { createSysUser } = useSysUser();
 
@@ -105,15 +110,23 @@ export default function ServerUsers({ server }) {
       </Grid>
 
       <ListHeader items={headers} width={width} />
-      {users?.map(({ id, username }, i) => (
+      {users?.map(({ id, username, status }, i) => (
         <ListItem
           id={id}
           path={undefined}
           status={"white"}
           renderItem={
             <>
-              <Box style={{ width: width[0] }}>
+              <Box
+                style={{
+                  width: width[0],
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "center",
+                }}
+              >
                 <Typography>{username}</Typography>
+                {status == "loading" && <CircularProgress size="1rem" />}
               </Box>
             </>
           }
