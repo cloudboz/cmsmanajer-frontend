@@ -26,8 +26,6 @@ export default function FormUser({
   setFieldValue,
   createUser,
   setCreateUser,
-  sshKey,
-  setSshKey,
 }) {
   const handleCreateUser = async () => {
     setCreateUser(!createUser);
@@ -46,7 +44,6 @@ export default function FormUser({
       id: "",
       username: "",
       password: "",
-      sshKey: "",
     },
   };
 
@@ -59,16 +56,10 @@ export default function FormUser({
         id: options[0].id,
         username: options[0].username,
         password: "",
-        sshKey: options[0].sshKey?.name || "",
       });
       setFieldValue("createUser", createUser);
     }
   }, [createUser]);
-
-  React.useEffect(() => {
-    setFieldValue("systemUser.password", "");
-    setFieldValue("systemUser.sshKey", "");
-  }, [sshKey]);
 
   return (
     <>
@@ -90,37 +81,12 @@ export default function FormUser({
             placeholder="e.g. ubuntu"
             {...defaultProps}
           />
-          <FormControlLabel
-            label={<Typography variant="subtitle1">Use SSH Key</Typography>}
-            control={
-              <Checkbox
-                checked={sshKey}
-                onChange={() => setSshKey(!sshKey)}
-                color="secondary"
-              />
-            }
+          <Input
+            name="systemUser.password"
+            label="Password"
+            placeholder="*********"
+            {...defaultProps}
           />
-          {!sshKey && (
-            <Input
-              name="systemUser.password"
-              label="Password"
-              placeholder="e.g. *********"
-              {...defaultProps}
-            />
-          )}
-          {sshKey && (
-            <Input
-              name="systemUser.sshKey"
-              label="Private Key"
-              placeholder={`e.g. -----BEGIN RSA PRIVATE KEY-----
-L8AsOpF9j2OvMPppF2ZvGIw2mJZp6EIFUoOzSUv9G5zZ90rTVtvu0Fi
-...
------END RSA PRIVATE KEY-----`}
-              multiline
-              rows={5}
-              {...defaultProps}
-            />
-          )}
         </>
       ) : (
         <Select
@@ -135,13 +101,12 @@ L8AsOpF9j2OvMPppF2ZvGIw2mJZp6EIFUoOzSUv9G5zZ90rTVtvu0Fi
           touched={touched}
           handleBlur={handleBlur}
           handleChange={(e) => {
-            const { id, username, sshKey = {} } = e.target.value;
+            const { id, username } = e.target.value;
 
             setFieldValue("systemUser", {
               id,
               username,
               password: "",
-              sshKey: sshKey.name,
             });
           }}
         />

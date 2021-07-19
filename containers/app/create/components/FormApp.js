@@ -16,7 +16,6 @@ export default function FormApp({
   handleSubmit: handleSubmitForm,
 }) {
   const [createUser, setCreateUser] = React.useState(false);
-  const [sshKey, setSshKey] = React.useState(false);
 
   const { getSysUsersByServer } = useServer();
 
@@ -33,13 +32,8 @@ export default function FormApp({
         .string()
         .min(4)
         .when("createUser", (_, schema) => {
-          return createUser && !sshKey
-            ? schema.required()
-            : schema.notRequired();
+          return createUser ? schema.required() : schema.notRequired();
         }),
-      sshKey: yup.string().when("createUser", (_, schema) => {
-        return createUser && sshKey ? schema.required() : schema.notRequired();
-      }),
     }),
   });
 
@@ -50,7 +44,6 @@ export default function FormApp({
       id: users?.[0].id,
       username: users?.[0].username,
       password: "",
-      sshKey: users?.[0].sshKey?.name || "",
     },
     createUser: false,
   };
@@ -100,8 +93,6 @@ export default function FormApp({
             setFieldValue={setFieldValue}
             createUser={createUser}
             setCreateUser={setCreateUser}
-            sshKey={sshKey}
-            setSshKey={setSshKey}
           />
         </Grid>
         <Grid item sm={6}></Grid>

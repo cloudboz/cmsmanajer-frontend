@@ -30,7 +30,6 @@ export default function FormWP({
   handleSubmit: handleSubmitForm,
 }) {
   const [createUser, setCreateUser] = React.useState(false);
-  const [sshKey, setSshKey] = React.useState(false);
 
   const { getSysUsersByServer } = useServer();
 
@@ -48,13 +47,8 @@ export default function FormWP({
         .string()
         .min(4)
         .when("createUser", (_, schema) => {
-          return createUser && !sshKey
-            ? schema.required()
-            : schema.notRequired();
+          return createUser ? schema.required() : schema.notRequired();
         }),
-      sshKey: yup.string().when("createUser", (_, schema) => {
-        return createUser && sshKey ? schema.required() : schema.notRequired();
-      }),
     }),
     wordpress: yup.object().shape({
       title: yup.string().required(),
@@ -72,7 +66,6 @@ export default function FormWP({
       id: users?.[0].id,
       username: users?.[0].username,
       password: "",
-      sshKey: users?.[0].sshKey?.name || "",
     },
     wordpress: {
       title: "",
@@ -139,8 +132,6 @@ export default function FormWP({
             setFieldValue={setFieldValue}
             createUser={createUser}
             setCreateUser={setCreateUser}
-            sshKey={sshKey}
-            setSshKey={setSshKey}
           />
         </Grid>
         <Grid item sm={6}>
