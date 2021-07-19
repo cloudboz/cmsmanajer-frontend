@@ -14,10 +14,12 @@ import { useRouter } from "next/router";
 
 import { StyledTabs, StyledTab } from "./Tab";
 import Drawer from "./Drawer";
+import { useUser } from "context/auth";
 
 export default function Navbar({ openContactUs }) {
   const classes = useStyles();
   const router = useRouter();
+  const { isLoggedIn } = useUser();
 
   return (
     <>
@@ -33,15 +35,27 @@ export default function Navbar({ openContactUs }) {
                 label="Documentation"
                 href="https://docs.cmsmanajer.com"
               />
-              <StyledTab label="Login" href="/login" />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.primary}
-                href="/register"
-              >
-                SIGN UP
-              </Button>
+              {!isLoggedIn && <StyledTab label="Login" href="/login" />}
+              {!isLoggedIn && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.primary}
+                  href="/register"
+                >
+                  SIGN UP
+                </Button>
+              )}
+              {isLoggedIn && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.primary}
+                  href="/servers"
+                >
+                  DASHBOARD
+                </Button>
+              )}
             </Hidden>
             <Hidden mdUp>
               <Drawer openContactUs={openContactUs} />

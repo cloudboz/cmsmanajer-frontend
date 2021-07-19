@@ -8,7 +8,7 @@ export function useUser() {
 
 export function UserProvider(props) {
   // state
-  const [user, setUser] = useState({ name: "dummy" });
+  const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const { children } = props;

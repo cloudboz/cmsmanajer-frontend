@@ -22,6 +22,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { StyledTabs, StyledTab } from "./Tab";
 import { useRouter } from "next/router";
 import { useAuthentication } from "hooks/auth";
+import { useUser } from "context/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar({ value: initValue }) {
   const classes = useStyles();
   const router = useRouter();
+  const { setIsLoggedIn } = useUser();
   const { logout } = useAuthentication();
   const [value, setValue] = React.useState(initValue);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -68,9 +70,10 @@ export default function Navbar({ value: initValue }) {
     router.push("/");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     logout();
-    router.push("/");
+    await setIsLoggedIn(false);
+    router.replace("/");
     setAnchorEl(null);
   };
 
