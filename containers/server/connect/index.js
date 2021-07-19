@@ -40,12 +40,12 @@ const requirements = [
 ];
 
 const initialValues = {
-  name: "bismillah",
-  ip: "52.221.255.71",
+  name: "",
+  ip: "",
   webServer: "nginx",
   systemUser: {
-    username: "ubuntu",
-    password: "4esz3wa2q",
+    username: "",
+    password: "",
     sshKey: "",
   },
 };

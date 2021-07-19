@@ -34,11 +34,11 @@ export default function Register() {
       localStorage.setItem("token", data.accessToken);
       setToken(data.accessToken);
 
-      router.push("/verify");
+      router.replace("/verify");
     } catch (error) {
       console.error(error.response);
       let message = "";
-      switch (error.response.status) {
+      switch (error.response?.status) {
         case 400:
           message = error.response.data?.message;
           break;
@@ -77,9 +77,11 @@ export default function Register() {
             maxWidth="sm"
             style={{ paddingRight: "50px", marginBlock: "100px" }}
           >
-            <Link variant="h5" className={classes.logo} href="/">
-              CMS Manajer
-            </Link>
+            <Typography variant="h5" className={classes.logo}>
+              <Link href="/" underline="none" color="inherit">
+                CMS Manajer
+              </Link>
+            </Typography>
             <Typography variant="h3" className={classes.bold} paragraph>
               A few clicks away from connecting your server
             </Typography>

@@ -104,12 +104,7 @@ export default function Form({ onSubmit, isLoading }) {
         </Link>
       </Typography>
 
-      <form
-        className={classes.root}
-        noValidate
-        onSubmit={handleSubmit}
-        autoComplete="off"
-      >
+      <form className={classes.root} noValidate onSubmit={handleSubmit}>
         {data.map((input, i) => {
           switch (input.type) {
             case "select":
