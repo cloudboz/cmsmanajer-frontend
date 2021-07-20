@@ -177,6 +177,7 @@ export default function CreateApp({ user }) {
               server={server}
               app={app}
               handleSubmit={handleSubmit}
+              isLoading={create.isLoading}
             />
           </Box>
         </Box>

@@ -19,6 +19,7 @@ export default function FormWeb({
   classes,
   server,
   handleSubmit: handleSubmitForm,
+  isLoading: isLoadingForm,
 }) {
   const [createUser, setCreateUser] = React.useState(false);
 
@@ -124,7 +125,7 @@ export default function FormWeb({
         color="primary"
         size="large"
         style={{ marginTop: "25px", marginBottom: "3px" }}
-        disabled={!isValid}
+        disabled={!isValid || isLoadingForm}
         onClick={submitForm}
       >
         Create
