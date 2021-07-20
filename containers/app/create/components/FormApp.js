@@ -1,16 +1,24 @@
 import React from "react";
-import { Typography, Grid, Button } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  Button,
+  OutlinedInput,
+  FormControl,
+  FormHelperText,
+} from "@material-ui/core";
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
 
 import Select from "components/Select";
+import Input from "components/Input";
 import FormUser from "./FormUser";
 
 import useServer from "hooks/server";
 import { API } from "utils/api";
 
 export default function FormApp({
-  name,
+  app,
   classes,
   server,
   handleSubmit: handleSubmitForm,
@@ -38,8 +46,8 @@ export default function FormApp({
   });
 
   const initialValues = {
-    name,
-    type: name.toLowerCase(),
+    name: app.name,
+    type: app.name.toLowerCase(),
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
@@ -76,9 +84,9 @@ export default function FormApp({
   };
 
   React.useEffect(() => {
-    setFieldValue("name", name);
-    setFieldValue("type", name.toLowerCase());
-  }, [name]);
+    setFieldValue("name", app.name);
+    setFieldValue("type", app.name.toLowerCase());
+  }, [app]);
 
   return isLoading ? (
     <h1>Loading</h1>
@@ -86,6 +94,34 @@ export default function FormApp({
     <form noValidate onSubmit={handleSubmit} autoComplete="off">
       <Grid container spacing={2}>
         <Grid item sm={6}>
+          <FormControl style={{ marginBlock: 3 }} fullWidth>
+            <Typography variant="subtitle2">Name</Typography>
+            <OutlinedInput
+              name="name"
+              type="text"
+              value={app.name}
+              fullWidth
+              disabled={true}
+              margin="dense"
+            />
+            <FormHelperText disabled></FormHelperText>
+          </FormControl>
+          {app.port && (
+            <FormControl style={{ marginBlock: 3 }} fullWidth>
+              <Typography variant="subtitle2">Remote Access</Typography>
+              <OutlinedInput
+                name="name"
+                type="text"
+                value={server.ip + ":" + app.port}
+                fullWidth
+                disabled={true}
+                margin="dense"
+              />
+              <FormHelperText disabled></FormHelperText>
+            </FormControl>
+          )}
+          {/* <Input name="name" label="Name" value={name} disabled />
+          <Input name="name" label="Name" value={name} disabled /> */}
           <FormUser
             {...defaultProps}
             classes={classes}

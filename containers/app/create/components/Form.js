@@ -6,7 +6,7 @@ import FormWP from "./FormWP";
 export default function Form(props) {
   const classes = useStyles();
 
-  switch (props.type) {
+  switch (props.app.type) {
     case "app":
       return (
         <Paper variant="outlined" className={classes.root}>

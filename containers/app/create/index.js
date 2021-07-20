@@ -31,6 +31,13 @@ export default function CreateApp({ user }) {
   const [name, setName] = React.useState("");
   const [stack, setStack] = React.useState("");
   const [server, setServer] = React.useState({});
+  const [app, setApp] = React.useState({
+    name: "",
+    icon: "",
+    type: "",
+    stack: "",
+    port: null,
+  });
 
   const [loading, setLoading] = React.useState(false);
   const [res, setRes] = React.useState({});
@@ -48,14 +55,6 @@ export default function CreateApp({ user }) {
       localStorage.removeItem("serverId");
     }
   }, [servers]);
-
-  const handleClick =
-    ({ name, type, stack }) =>
-    () => {
-      setName(name);
-      setType(type);
-      setStack(stack);
-    };
 
   const handleSubmit = async (values) => {
     try {
@@ -135,7 +134,7 @@ export default function CreateApp({ user }) {
                   name={app.name}
                   icon={app.icon}
                   key={i}
-                  onClick={handleClick(app)}
+                  onClick={() => setApp(app)}
                   active={app.name == name}
                   disabled={validate(app, server)}
                 />
@@ -176,9 +175,7 @@ export default function CreateApp({ user }) {
             <Form
               classes={classes}
               server={server}
-              name={name}
-              type={type}
-              stack={stack}
+              app={app}
               handleSubmit={handleSubmit}
             />
           </Box>
@@ -234,25 +231,28 @@ const listApp = [
   {
     name: "Nginx",
     icon: "/nginx.svg",
-    type: "web",
+    type: "app",
     stack: "nginx",
+    port: 80,
   },
   {
     name: "Apache",
     icon: "/apache.svg",
-    type: "web",
+    type: "app",
     stack: "apache",
+    port: 80,
   },
-
   {
     name: "MySQL",
     icon: "/mysql.svg",
     type: "app",
+    port: 3306,
   },
   {
     name: "MongoDB",
     icon: "/mongodb.svg",
     type: "app",
+    port: 27017,
   },
   {
     name: "Docker",

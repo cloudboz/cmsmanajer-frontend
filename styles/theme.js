@@ -44,6 +44,9 @@ const theme = createMuiTheme({
         "&:hover $notchedOutline": {
           borderColor: yellow.main,
         },
+        "&$disabled": {
+          backgroundColor: common.gray,
+        },
         // backgroundColor: common.white,
       },
     },

@@ -24,7 +24,7 @@ const wordpress = [
 ];
 
 export default function FormWP({
-  name,
+  app,
   classes,
   server,
   handleSubmit: handleSubmitForm,

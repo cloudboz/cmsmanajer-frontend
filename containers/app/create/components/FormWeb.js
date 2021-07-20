@@ -15,10 +15,9 @@ import FormUser from "./FormUser";
 import useServer from "hooks/server";
 
 export default function FormWeb({
-  name,
+  app,
   classes,
   server,
-  stack,
   handleSubmit: handleSubmitForm,
 }) {
   const [createUser, setCreateUser] = React.useState(false);
@@ -44,8 +43,8 @@ export default function FormWeb({
   });
 
   const initialValues = {
-    name,
-    type: stack,
+    name: app.name,
+    type: app.stack,
     domain: "",
     systemUser: {
       id: users?.[0].id,
@@ -83,9 +82,9 @@ export default function FormWeb({
   };
 
   React.useEffect(() => {
-    setFieldValue("name", name);
-    setFieldValue("type", stack);
-  }, [name]);
+    setFieldValue("name", app.name);
+    setFieldValue("type", app.stack);
+  }, [app]);
 
   return isLoading ? (
     <h1>Loading</h1>
