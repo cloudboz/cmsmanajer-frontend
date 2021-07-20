@@ -57,28 +57,18 @@ export default function AppDatabases({ app, dbs, refetch }) {
 
   React.useEffect(() => {
     if (socket) {
-      socket.on("logs" + user.id + "createdatabase", (data) => {
+      socket.on("logs" + user.id, (data) => {
         console.log(data);
       });
 
-      socket.on("done" + user.id + "createdatabase", () => {
+      socket.on("done" + user.id, (data) => {
         refetch();
-        notif.success("Database created");
+        notif.success(data);
       });
 
-      socket.on("error" + user.id + "createdatabase", (data) => {
+      socket.on("error" + user.id, (data) => {
         refetch();
-        notif.error("Failed to create database. " + data);
-      });
-
-      socket.on("done" + user.id + "deletedatabase", () => {
-        refetch();
-        notif.success("Database deleted");
-      });
-
-      socket.on("error" + user.id + "deletedatabase", (data) => {
-        refetch();
-        notif.error("Failed to delete database. " + data);
+        notif.error(data);
       });
     }
   }, [socket]);

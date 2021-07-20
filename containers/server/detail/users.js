@@ -20,6 +20,8 @@ import ListItem from "components/ListItem";
 import useSysUser from "hooks/systemUser";
 import useServer from "hooks/server";
 import useSocket from "hooks/socket";
+import { useUser } from "context/auth";
+import useNotif from "hooks/notif";
 
 const schema = yup.object({
   username: yup.string().required(),
@@ -30,6 +32,8 @@ export default function ServerUsers({ server }) {
   const classes = useStyles();
   const router = useRouter();
   const socket = useSocket();
+  const notif = useNotif();
+  const { user } = useUser();
   const [open, setOpen] = React.useState(false);
   const [id, setID] = React.useState("");
 
@@ -42,6 +46,24 @@ export default function ServerUsers({ server }) {
     refetch,
   } = getSysUsersByServer(server.id);
   const { mutateAsync: create, isLoading } = createSysUser;
+
+  React.useEffect(() => {
+    if (socket) {
+      socket.on("logs" + user.id, (data) => {
+        console.log(data);
+      });
+
+      socket.on("done" + user.id, (data) => {
+        refetch();
+        notif.success(data);
+      });
+
+      socket.on("error" + user.id, (data) => {
+        refetch();
+        notif.error(data);
+      });
+    }
+  }, [socket]);
 
   const {
     handleSubmit,
@@ -61,8 +83,8 @@ export default function ServerUsers({ server }) {
         ip: server.ip,
       },
     },
-    onSubmit: (values) => {
-      handleSubmitForm(values);
+    onSubmit: (values, { resetForm }) => {
+      handleSubmitForm(values, resetForm);
     },
     validationSchema: schema,
   });
@@ -75,10 +97,11 @@ export default function ServerUsers({ server }) {
     setOpen(false);
   };
 
-  const handleSubmitForm = async (values) => {
+  const handleSubmitForm = async (values, reset) => {
     try {
       // console.log(values);
       await create(values);
+      reset();
       refetch();
       setOpen(false);
     } catch (error) {

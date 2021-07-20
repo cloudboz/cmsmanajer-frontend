@@ -30,7 +30,6 @@ export default function CreateApp({ user }) {
   const [type, setType] = React.useState("");
   const [name, setName] = React.useState("");
   const [stack, setStack] = React.useState("");
-  const [index, setIndex] = React.useState(0);
   const [server, setServer] = React.useState({});
 
   const [loading, setLoading] = React.useState(false);
@@ -39,10 +38,15 @@ export default function CreateApp({ user }) {
   const { data: servers, isLoading, refetch } = getServers();
 
   React.useEffect(async () => {
-    const id = localStorage.getItem("serverId") || undefined;
-    if (id) await setIndex(servers?.findIndex((s) => s.id == id));
-    setServer(servers?.[index] || {});
-    localStorage.removeItem("serverId");
+    if (servers) {
+      const id = localStorage.getItem("serverId") || undefined;
+      let i = 0;
+      if (id) {
+        i = servers?.findIndex((s) => s.id == id);
+      }
+      setServer(servers[i]);
+      localStorage.removeItem("serverId");
+    }
   }, [servers]);
 
   const handleClick =
@@ -116,10 +120,7 @@ export default function CreateApp({ user }) {
                     label="Server"
                     placeholder="Choose server..."
                     value={server}
-                    handleChange={(e) => {
-                      setServer(e.target.value);
-                      setIndex(servers.findIndex((s) => s == e.target.value));
-                    }}
+                    handleChange={(e) => setServer(e.target.value)}
                     options={servers || []}
                     renderOption="name"
                   />

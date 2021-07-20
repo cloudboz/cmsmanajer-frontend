@@ -6,6 +6,7 @@ export default function useNotif() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const style = {
     color: "white",
+    padding: 0,
     marginRight: 8,
   };
 

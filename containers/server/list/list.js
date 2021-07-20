@@ -55,8 +55,16 @@ export default function ListServer({ servers, getStatus }) {
           path="/servers"
           renderItem={
             <>
-              <Box style={{ width: width[0] }}>
+              <Box
+                style={{
+                  width: width[0],
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "center",
+                }}
+              >
                 <Typography>{name}</Typography>
+                {status == "loading" && <CircularProgress size="1rem" />}
               </Box>
               <Box style={{ width: width[1] }}>
                 <Typography>{ip.replace("\n", "; ")}</Typography>
@@ -69,7 +77,7 @@ export default function ListServer({ servers, getStatus }) {
                   alignItems: "center",
                 }}
               >
-                <img src={`/${webServer}.svg`} height={24} />
+                {webServer && <img src={`/${webServer}.svg`} height={24} />}
                 <Typography>{webServer || "-"}</Typography>
               </Box>
               <Box style={{ width: width[3] }}>

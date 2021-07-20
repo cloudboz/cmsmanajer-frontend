@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-export default function useSocket(url = "http://localhost:5000") {
+export default function useSocket(url = process.env.NEXT_PUBLIC_BASE_URL) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
