@@ -353,7 +353,7 @@ const steps = {
   "wp-lamp": [
     {
       name: "Installing app",
-      parts: 18,
+      parts: 30,
     },
     {
       name: "Finish",
@@ -363,7 +363,7 @@ const steps = {
   "wp-lemp": [
     {
       name: "Installing app",
-      parts: 18,
+      parts: 30,
     },
     {
       name: "Finish",

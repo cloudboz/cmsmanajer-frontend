@@ -97,7 +97,7 @@ export default function AppSettings({ app, refetch }) {
         <Detail label="Server" value={app.server.name} />
         <Detail label="Domain" value={app.domain || "-"} />
         {app.type == "lemp" && (
-          <Detail label="Path" value={"/var/www/" + app.domain + ".conf"} />
+          <Detail label="Path" value={"/var/www/" + app.domain} />
         )}
         <Detail label="Type" value={app.type} />
         <Detail label="Databases" value={app.databases.length || 0} />
