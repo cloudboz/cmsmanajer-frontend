@@ -27,9 +27,6 @@ export default function CreateApp({ user }) {
   const notif = useNotif();
   const { getServers, editServer: edit } = useServer();
   const { createApp: create } = useApp();
-  const [type, setType] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [stack, setStack] = React.useState("");
   const [server, setServer] = React.useState({});
   const [app, setApp] = React.useState({
     name: "",
@@ -129,14 +126,14 @@ export default function CreateApp({ user }) {
 
             {/* <Paper variant="outlined" style={{ padding: 30 }}> */}
             <Box className={classes.root}>
-              {listApp.map((app, i) => (
+              {listApp.map((item, i) => (
                 <Item
-                  name={app.name}
-                  icon={app.icon}
+                  name={item.name}
+                  icon={item.icon}
                   key={i}
-                  onClick={() => setApp(app)}
-                  active={app.name == name}
-                  disabled={validate(app, server)}
+                  onClick={() => setApp(item)}
+                  active={item.name == app.name}
+                  disabled={validate(item, server)}
                 />
               ))}
             </Box>
