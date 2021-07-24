@@ -11,4 +11,6 @@ export const common = {
   black: "#000000",
   white: "#FFFFFF",
   gray: "#F0F0F0",
+  green: "#32D69F",
+  red: "#F13B3B",
 };

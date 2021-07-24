@@ -1,8 +1,9 @@
 import CreateApp from "containers/app/create";
+import withAuth from "components/withAuth";
 import getCookie from "utils/getCookie";
 import { API, setToken } from "utils/api";
 
-export default CreateApp;
+export default withAuth(CreateApp);
 
 export const getServerSideProps = async (context) => {
   try {

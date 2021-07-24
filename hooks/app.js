@@ -8,11 +8,17 @@ const useApp = () => {
       return data.data;
     });
 
-  const getAppByID = (id) =>
-    useQuery("app", async () => {
-      const { data } = await API.get("/apps/" + id);
-      return data.data;
-    });
+  const getAppByID = (id, options = {}) =>
+    useQuery(
+      "app",
+      async () => {
+        const { data } = await API.get("/apps/" + id);
+        return data.data;
+      },
+      {
+        onError: options.onError,
+      }
+    );
 
   const getDatabasesByApp = (id) =>
     useQuery("appUsers", async () => {
@@ -22,7 +28,9 @@ const useApp = () => {
 
   const createApp = useMutation((body) => API.post("/apps", body));
 
-  const updateApp = useMutation((id, body) => API.patch("/apps/" + id, body));
+  const updateApp = useMutation(({ id, body }) =>
+    API.patch("/apps/" + id, body)
+  );
 
   const deleteApp = useMutation((id) => API.delete("/apps/" + id));
 

@@ -3,7 +3,7 @@ import { Switch } from "@material-ui/core";
 
 const pxToRem = (px, oneRemPx = 17) => `${px / oneRemPx}rem`;
 
-const borderWidth = 2;
+const borderWidth = 1;
 const width = pxToRem(46);
 const height = pxToRem(28);
 const size = pxToRem(16);
@@ -36,7 +36,7 @@ const StyledSwitch = withStyles((theme) => ({
     borderRadius: 40,
     border: `solid ${theme.palette.grey[400]}`,
     borderWidth,
-    backgroundColor: theme.palette.grey[50],
+    backgroundColor: "#FDFDFD",
     opacity: 1,
     transition: theme.transitions.create(["background-color", "border"]),
     boxSizing: "border-box",

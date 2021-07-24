@@ -15,23 +15,14 @@ import { useAuthentication } from "hooks/auth";
 import { setToken } from "utils/api";
 
 import RegisterForm from "./components/RegisterForm";
-import Snackbar from "components/Snackbar";
 import { useRouter } from "next/router";
+import useNotif from "hooks/notif";
 
 export default function Register() {
   const classes = useStyles();
   const router = useRouter();
+  const notif = useNotif();
   const { register } = useAuthentication();
-  const [open, setOpen] = React.useState(false);
-  const [message, setMessage] = React.useState("");
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   const handleSubmit = async (values) => {
     try {
@@ -43,23 +34,22 @@ export default function Register() {
       localStorage.setItem("token", data.accessToken);
       setToken(data.accessToken);
 
-      router.push("/verify");
+      router.replace("/verify");
     } catch (error) {
       console.error(error.response);
-      switch (error.response.status) {
+      let message = "";
+      switch (error.response?.status) {
         case 400:
-          setMessage(error.response.data?.message);
+          message = error.response.data?.message;
           break;
         case 403:
-          setMessage(
-            "Your email address or phone number has already been used."
-          );
+          message = "Your email address or phone number has already been used.";
           break;
         default:
-          setMessage("Internal server error");
+          message = "Internal server error";
           break;
       }
-      setOpen(true);
+      notif.error(message);
     }
   };
 
@@ -79,12 +69,6 @@ export default function Register() {
             onSubmit={handleSubmit}
             isLoading={register.isLoading}
           />
-          <Snackbar
-            severity="error"
-            message={message}
-            open={open}
-            handleClose={handleClose}
-          />
         </Container>
       </Grid>
       <Hidden smDown>
@@ -93,9 +77,11 @@ export default function Register() {
             maxWidth="sm"
             style={{ paddingRight: "50px", marginBlock: "100px" }}
           >
-            <Link variant="h5" className={classes.logo} href="/">
-              CMS Manajer
-            </Link>
+            <Typography variant="h5" className={classes.logo}>
+              <Link href="/" underline="none" color="inherit">
+                CMS Manajer
+              </Link>
+            </Typography>
             <Typography variant="h3" className={classes.bold} paragraph>
               A few clicks away from connecting your server
             </Typography>

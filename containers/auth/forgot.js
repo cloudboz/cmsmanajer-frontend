@@ -3,28 +3,18 @@ import { Container, Typography, makeStyles } from "@material-ui/core";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import * as yup from "yup";
 
-import Form from "./components/Form";
-import Snackbar from "components/Snackbar";
 import ForgotForm from "./components/ForgotForm";
 import { setToken } from "utils/api";
 import { useAuthentication } from "hooks/auth";
+import useNotif from "hooks/notif";
 
 export default function BeginForgot() {
   const classes = useStyles();
   const router = useRouter();
+  const notif = useNotif();
   const { beginForgot } = useAuthentication();
-  const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   const handleSubmit = async (values) => {
     try {
@@ -49,7 +39,7 @@ export default function BeginForgot() {
           setMessage("Internal server error");
           break;
       }
-      setOpen(true);
+      notif.error(message);
     }
   };
 
@@ -73,12 +63,6 @@ export default function BeginForgot() {
           CMS Manajer
         </Typography>
         <ForgotForm onSubmit={handleSubmit} isLoading={beginForgot.isLoading} />
-        <Snackbar
-          severity="error"
-          message={message}
-          open={open}
-          handleClose={handleClose}
-        />
       </Container>
     </Container>
   );

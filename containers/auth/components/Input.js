@@ -24,6 +24,7 @@ export default function Input({
   values,
   errors,
   touched,
+  autoFocus = false,
 }) {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -54,6 +55,7 @@ export default function Input({
         }
         value={values[name]}
         placeholder={placeholder}
+        autoFocus={autoFocus}
         margin="dense"
         error={touched[name] && !!errors[name]}
         onBlur={handleBlur}

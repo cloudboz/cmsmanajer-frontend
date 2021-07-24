@@ -14,40 +14,43 @@ import Select from "components/Select";
 import FormUser from "./FormUser";
 import useServer from "hooks/server";
 
-const schema = yup.object({
-  name: yup.string().required(),
-  type: yup.string().required(),
-  domain: yup.string().required(),
-  server: yup.mixed().required(),
-  systemUser: yup.object().shape({
-    id: yup.string(),
-    username: yup.string().required(),
-    password: yup.string().min(4).required(),
-  }),
-  createUser: yup.boolean().required(),
-});
-
 export default function FormWeb({
-  name,
+  app,
   classes,
-  servers,
-  stack,
+  server,
   handleSubmit: handleSubmitForm,
+  isLoading: isLoadingForm,
 }) {
-  const [server, setServer] = React.useState(servers[0]);
+  const [createUser, setCreateUser] = React.useState(false);
+
   const { getSysUsersByServer } = useServer();
 
   const { data: users, isLoading } = getSysUsersByServer(server.id);
+  const schema = yup.object({
+    name: yup.string().required(),
+    type: yup.string().required(),
+    domain: yup.string().required(),
+    createUser: yup.boolean().required(),
+    systemUser: yup.object().shape({
+      id: yup.string(),
+      username: yup.string().required(),
+      password: yup
+        .string()
+        .min(4)
+        .when("createUser", (_, schema) => {
+          return createUser ? schema.required() : schema.notRequired();
+        }),
+    }),
+  });
 
   const initialValues = {
-    name,
-    type: stack,
+    name: app.name,
+    type: app.stack,
     domain: "",
-    server,
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
-      password: "nulll",
+      password: "",
     },
     createUser: false,
   };
@@ -71,10 +74,18 @@ export default function FormWeb({
     validationSchema: schema,
   });
 
+  const defaultProps = {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
+  };
+
   React.useEffect(() => {
-    setFieldValue("name", name);
-    setFieldValue("type", stack);
-  }, [name]);
+    setFieldValue("name", app.name);
+    setFieldValue("type", app.stack);
+  }, [app]);
 
   return isLoading ? (
     <h1>Loading</h1>
@@ -87,49 +98,24 @@ export default function FormWeb({
             label="Name"
             className={classes.form}
             placeholder="e.g. My Web"
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
           />
-          <Select
-            name="server"
-            label="Server"
-            className={classes.form}
-            placeholder="Choose server..."
-            values={values.server}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={(e) => {
-              setFieldValue("server", e.target.value);
-              setServer(e.target.value);
-            }}
-            options={servers}
-            renderOption="name"
-          />
+
           <Input
             name="domain"
             label="Domain"
             className={classes.form}
             placeholder="e.g. sub.domain.com"
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
           />
 
           <FormUser
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
             classes={classes}
             options={users}
             setFieldValue={setFieldValue}
+            createUser={createUser}
+            setCreateUser={setCreateUser}
           />
         </Grid>
         <Grid item sm={6}></Grid>
@@ -139,7 +125,7 @@ export default function FormWeb({
         color="primary"
         size="large"
         style={{ marginTop: "25px", marginBottom: "3px" }}
-        disabled={!isValid}
+        disabled={!isValid || isLoadingForm}
         onClick={submitForm}
       >
         Create

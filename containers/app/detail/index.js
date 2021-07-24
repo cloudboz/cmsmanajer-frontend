@@ -16,26 +16,36 @@ import AppSettings from "./settings";
 
 import useServer from "hooks/server";
 import useApp from "hooks/app";
+import { Loader } from "components/Loader";
 
 export default function DetailApp({ id }) {
   const classes = useStyles();
   const router = useRouter();
-  const { getAppByID, getDatabasesByApp } = useApp();
+  const { getAppByID } = useApp();
 
-  const { data: app, isLoading: isLoadingServer } = getAppByID(id);
-  const { data: dbs, isLoading: isLoadingApps } = getDatabasesByApp(id);
+  const {
+    data: app,
+    isLoading: isLoadingServer,
+    isError,
+    refetch,
+  } = getAppByID(id, {
+    onError: () => router.replace("/apps"),
+  });
 
   const tabsItem = ["Databases", "Settings"];
+  const disableDb = ["docker", "mongodb", "nginx", "apache", "mysql"];
 
   return (
     <Layout>
-      {isLoadingServer || isLoadingApps || isLoadingUsers ? (
-        <h1>Loading</h1>
+      {isLoadingServer ? (
+        <Loader />
+      ) : isError ? (
+        <h1>not found</h1>
       ) : (
         <>
           <Grid container style={{ justifyContent: "space-between" }}>
             <Grid item>
-              <Typography variant="h4">{server.name}</Typography>
+              <Typography variant="h4">{app.name}</Typography>
               <Grid container spacing={5}>
                 <Grid item>
                   <Typography variant="body1" paragraph>
@@ -45,22 +55,28 @@ export default function DetailApp({ id }) {
 
                 <Grid item>
                   <Typography variant="body1" paragraph>
-                    IP: {app.server.ip}
+                    IP: {app.server.ip.replace("\n", "; ")}
                   </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography variant="body1" paragraph>
-                    Type: {app.type}
+                    Type: {app.type.includes("wp") ? "wordpress" : app.type}
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
 
-          <Tabs items={tabsItem}>
-            <AppDatabases dbs={dbs} />
-            <AppSettings app={app} />
+          <Tabs
+            items={tabsItem}
+            disabled={disableDb.includes(app.type) ? [0] : []}
+            defaultIndex={0}
+          >
+            {!disableDb.includes(app.type) && (
+              <AppDatabases app={app} dbs={app.databases} refetch={refetch} />
+            )}
+            <AppSettings app={app} refetch={refetch} />
           </Tabs>
         </>
       )}

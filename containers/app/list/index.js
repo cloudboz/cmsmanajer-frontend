@@ -14,10 +14,11 @@ import { useRouter } from "next/router";
 import Layout from "components/Layout";
 import ListApp from "./list";
 import EmptyApp from "./empty";
-import EmptyServer from "./empty";
+import EmptyServer from "../../server/list/empty";
 
 import useApp from "hooks/app";
 import useServer from "hooks/server";
+import { Loader } from "components/Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +44,7 @@ export default function App() {
   const { getApps } = useApp();
   const { getServers } = useServer();
 
-  const { data: apps, isLoading } = getApps();
+  const { data: apps, isLoading, refetch } = getApps();
   const { data: servers, isLoading: isLoadingServer } = getServers();
 
   return (
@@ -64,7 +65,7 @@ export default function App() {
                 variant="contained"
                 color="primary"
                 onClick={() => router.push("/apps/create")}
-                disable={!servers?.length}
+                disabled={!servers?.length}
               >
                 Create App
               </Button>
@@ -74,10 +75,10 @@ export default function App() {
       </Grid>
       {isLoading || isLoadingServer ? (
         <>
-          <h1>Loading</h1>
+          <Loader />
         </>
       ) : apps?.length ? (
-        <ListApp apps={apps} status="white" />
+        <ListApp apps={apps} status="white" refetch={refetch} />
       ) : servers?.length ? (
         <EmptyApp />
       ) : (

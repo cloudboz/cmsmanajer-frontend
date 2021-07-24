@@ -13,17 +13,19 @@ import Alert from "@material-ui/lab/Alert";
 
 import { useRouter } from "next/router";
 
-import useServer from "hooks/server";
 import Modal from "components/Modal";
 import Section from "components/Section";
 import Detail from "components/Detail";
+import useApp from "hooks/app";
+import useNotif from "hooks/notif";
 
-export default function AppSettings({ apps, users, server }) {
+export default function AppSettings({ app, refetch }) {
   const classes = useStyles();
   const router = useRouter();
-  // const { getAppsByServer } = useServer();
+  const notif = useNotif();
+  const { deleteApp, updateApp: edit } = useApp();
   const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState(server.name);
+  const [name, setName] = React.useState(app.name);
   const [deleteName, setDelete] = React.useState("");
 
   const handleOpen = () => {
@@ -35,13 +37,24 @@ export default function AppSettings({ apps, users, server }) {
     setDelete("");
   };
 
-  const handleRename = async (values) => {
-    console.log(values);
+  const handleRename = async (e) => {
+    try {
+      e.preventDefault();
+      await edit.mutateAsync({ id: app.id, body: { name } });
+      refetch();
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
-  const handleDelete = async (values) => {
-    console.log(values);
-    router.push("/apps");
+  const handleDelete = async (e) => {
+    try {
+      e.preventDefault();
+      await deleteApp.mutateAsync(app.id);
+      router.push("/apps");
+    } catch (error) {
+      notif.error(error.response?.data?.message);
+    }
   };
 
   return (
@@ -56,32 +69,39 @@ export default function AppSettings({ apps, users, server }) {
 
       <Section name="App Information">
         <Typography variant="body1" className={classes.bold} gutterBottom>
-          Server Name
+          App Name
         </Typography>
         <Box className={classes.flex}>
-          <TextField
-            variant="outlined"
-            size="small"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={name == server.name}
-            onClick={handleRename}
-          >
-            Rename
-          </Button>
+          <form onSubmit={handleRename} noValidate autoComplete="off">
+            <TextField
+              variant="outlined"
+              size="small"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={name == app.name}
+              type="submit"
+              style={{ marginLeft: 3 }}
+            >
+              Rename
+            </Button>
+          </form>
         </Box>
         <Typography variant="caption" paragraph>
-          This does not change the name of your actual server.
+          This is only name to display in CMS Manajer.
         </Typography>
 
-        <Detail label="IP Address" value={server.ip} />
-        <Detail label="Apps" value={apps} />
-        <Detail label="System Users" value={users} />
-        <Detail label="Web Server" value={server.webServer} />
+        <Detail label="Server" value={app.server.name} />
+        <Detail label="Domain" value={app.domain || "-"} />
+        {app.type == "lemp" && (
+          <Detail label="Path" value={"/var/www/" + app.domain} />
+        )}
+        <Detail label="Type" value={app.type} />
+        <Detail label="Databases" value={app.databases.length || 0} />
+        <Detail label="System User" value={app.systemUser.username} />
       </Section>
 
       <Section name="Delete App">
@@ -108,29 +128,31 @@ export default function AppSettings({ apps, users, server }) {
           </Typography>
           <Typography variant="body2">
             This action <b>cannot</b> be undone. This will <b>permanently</b>{" "}
-            delete the <b>{server.name}</b> app and databases.
+            delete the <b>{app.name}</b> app and databases.
           </Typography>
         </Alert>
-        <Typography variant="body1">
-          Please type <b>{server.name}</b> to confirm.
-        </Typography>
-        <TextField
-          variant="outlined"
-          margin="dense"
-          fullWidth
-          className={classes.input}
-          value={deleteName}
-          onChange={(e) => setDelete(e.target.value)}
-        />
-        <Button
-          variant="outlined"
-          className={classes.btn}
-          fullWidth
-          disabled={deleteName != server.name}
-          onClick={handleDelete}
-        >
-          I understand the consequences, delete app.
-        </Button>
+        <form onSubmit={handleDelete}>
+          <Typography variant="body1">
+            Please type <b>{app.name}</b> to confirm.
+          </Typography>
+          <TextField
+            variant="outlined"
+            margin="dense"
+            fullWidth
+            className={classes.input}
+            value={deleteName}
+            onChange={(e) => setDelete(e.target.value)}
+          />
+          <Button
+            variant="outlined"
+            className={classes.btn}
+            fullWidth
+            disabled={deleteName != app.name}
+            type="submit"
+          >
+            I understand the consequences, delete app.
+          </Button>
+        </form>
       </Modal>
     </Container>
   );

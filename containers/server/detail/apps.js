@@ -29,7 +29,10 @@ export default function ServerUsers({ apps, server }) {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => router.push("/apps/create")}
+            onClick={() => {
+              localStorage.setItem("serverId", server.id);
+              router.push("/apps/create");
+            }}
           >
             Create App
           </Button>

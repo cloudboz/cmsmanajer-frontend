@@ -1,45 +1,58 @@
 import React from "react";
-import { Typography, Grid, Button } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  Button,
+  OutlinedInput,
+  FormControl,
+  FormHelperText,
+} from "@material-ui/core";
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
 
 import Select from "components/Select";
+import Input from "components/Input";
 import FormUser from "./FormUser";
 
 import useServer from "hooks/server";
 import { API } from "utils/api";
 
-const schema = yup.object({
-  name: yup.string().required(),
-  type: yup.string().required(),
-  server: yup.mixed().required(),
-  systemUser: yup.object().shape({
-    id: yup.string(),
-    username: yup.string().required(),
-    password: yup.string().min(4).required(),
-  }),
-  createUser: yup.boolean().required(),
-});
-
 export default function FormApp({
-  name,
+  app,
   classes,
-  servers,
+  server,
   handleSubmit: handleSubmitForm,
+  isLoading: isLoadingForm,
 }) {
-  const [server, setServer] = React.useState(servers[0]);
+  const [createUser, setCreateUser] = React.useState(false);
+
   const { getSysUsersByServer } = useServer();
 
   const { data: users, isLoading } = getSysUsersByServer(server.id);
 
+  const schema = yup.object({
+    name: yup.string().required(),
+    type: yup.string().required(),
+    createUser: yup.boolean().required(),
+    systemUser: yup.object().shape({
+      id: yup.string(),
+      username: yup.string().required(),
+      password: yup
+        .string()
+        .min(4)
+        .when("createUser", (_, schema) => {
+          return createUser ? schema.required() : schema.notRequired();
+        }),
+    }),
+  });
+
   const initialValues = {
-    name,
-    type: name.toLowerCase(),
-    server,
+    name: app.name,
+    type: app.name.toLowerCase(),
     systemUser: {
       id: users?.[0].id,
       username: users?.[0].username,
-      password: "nulll",
+      password: "",
     },
     createUser: false,
   };
@@ -63,10 +76,18 @@ export default function FormApp({
     validationSchema: schema,
   });
 
+  const defaultProps = {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
+  };
+
   React.useEffect(() => {
-    setFieldValue("name", name);
-    setFieldValue("type", name.toLowerCase());
-  }, [name]);
+    setFieldValue("name", app.name);
+    setFieldValue("type", app.name.toLowerCase());
+  }, [app]);
 
   return isLoading ? (
     <h1>Loading</h1>
@@ -74,33 +95,41 @@ export default function FormApp({
     <form noValidate onSubmit={handleSubmit} autoComplete="off">
       <Grid container spacing={2}>
         <Grid item sm={6}>
-          <Select
-            name="server"
-            label="Server"
-            className={classes.form}
-            placeholder="Choose server..."
-            values={values.server}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={(e) => {
-              console.log(values);
-              setFieldValue("server", e.target.value);
-              setServer(e.target.value);
-            }}
-            options={servers}
-            renderOption="name"
-          />
-
+          <FormControl style={{ marginBlock: 3 }} fullWidth>
+            <Typography variant="subtitle2">Name</Typography>
+            <OutlinedInput
+              name="name"
+              type="text"
+              value={app.name}
+              fullWidth
+              disabled={true}
+              margin="dense"
+            />
+            <FormHelperText disabled></FormHelperText>
+          </FormControl>
+          {app.port && (
+            <FormControl style={{ marginBlock: 3 }} fullWidth>
+              <Typography variant="subtitle2">Remote Access</Typography>
+              <OutlinedInput
+                name="name"
+                type="text"
+                value={server.ip + ":" + app.port}
+                fullWidth
+                disabled={true}
+                margin="dense"
+              />
+              <FormHelperText disabled></FormHelperText>
+            </FormControl>
+          )}
+          {/* <Input name="name" label="Name" value={name} disabled />
+          <Input name="name" label="Name" value={name} disabled /> */}
           <FormUser
-            values={values}
-            errors={errors}
-            touched={touched}
-            handleBlur={handleBlur}
-            handleChange={handleChange}
+            {...defaultProps}
             classes={classes}
             options={users}
             setFieldValue={setFieldValue}
+            createUser={createUser}
+            setCreateUser={setCreateUser}
           />
         </Grid>
         <Grid item sm={6}></Grid>
@@ -110,7 +139,7 @@ export default function FormApp({
         color="primary"
         size="large"
         style={{ marginTop: "25px", marginBottom: "3px" }}
-        disabled={!isValid}
+        disabled={!isValid || isLoadingForm}
         onClick={submitForm}
       >
         Create

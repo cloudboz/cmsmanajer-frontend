@@ -1,3 +1,4 @@
 import ListApp from "containers/app/list";
+import withAuth from "components/withAuth";
 
-export default ListApp;
+export default withAuth(ListApp);

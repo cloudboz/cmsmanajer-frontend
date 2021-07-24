@@ -104,12 +104,7 @@ export default function Form({ onSubmit, isLoading }) {
         </Link>
       </Typography>
 
-      <form
-        className={classes.root}
-        noValidate
-        onSubmit={handleSubmit}
-        autoComplete="off"
-      >
+      <form className={classes.root} noValidate onSubmit={handleSubmit}>
         {data.map((input, i) => {
           switch (input.type) {
             case "select":
@@ -172,6 +167,7 @@ export default function Form({ onSubmit, isLoading }) {
                 <Input
                   name={input.name}
                   placeholder={input.placeholder}
+                  autoFocus={i == 0}
                   {...defaultProps}
                   key={i}
                 />
@@ -191,7 +187,10 @@ export default function Form({ onSubmit, isLoading }) {
         </Button>
 
         <Typography variant="caption" align="center" display="block">
-          By signing up, you agree to the <strong>Terms of Service</strong>
+          By signing up, you agree to the{" "}
+          <Link href="/tos" color="inherit" className={classes.link}>
+            <strong>Terms of Service</strong>
+          </Link>
         </Typography>
       </form>
     </Container>

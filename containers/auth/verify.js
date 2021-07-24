@@ -1,28 +1,19 @@
 import React from "react";
 import { Container, Typography, Button, makeStyles } from "@material-ui/core";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import obscureEmail from "utils/obscureEmail";
 import { useAuthentication } from "hooks/auth";
 
-import Snackbar from "components/Snackbar";
+import useNotif from "hooks/notif";
 
 export default function VerifyEmail({ email, from, to }) {
   const classes = useStyles();
   const router = useRouter();
+  const notif = useNotif();
   const { resendVerification, resendForgot } = useAuthentication();
   const [timer, setTimer] = React.useState(60);
-  const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   React.useEffect(() => {
     if (timer != 0) {
@@ -50,7 +41,7 @@ export default function VerifyEmail({ email, from, to }) {
           setMessage("Internal server error");
           break;
       }
-      setOpen(true);
+      notif.error(message);
     }
   };
 
@@ -76,12 +67,6 @@ export default function VerifyEmail({ email, from, to }) {
           {timer == 0 ? "Resend Email" : timer}
         </Button>
       </Container>
-      <Snackbar
-        severity="error"
-        message={message}
-        open={open}
-        handleClose={handleClose}
-      />
     </Container>
   );
 }

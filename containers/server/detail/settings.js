@@ -18,10 +18,10 @@ import Modal from "components/Modal";
 import Section from "components/Section";
 import Detail from "components/Detail";
 
-export default function ServerSettings({ apps, users, server }) {
+export default function ServerSettings({ server, refetch }) {
   const classes = useStyles();
   const router = useRouter();
-  // const { getAppsByServer } = useServer();
+  const { deleteServer, editServer: edit } = useServer();
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(server.name);
   const [deleteName, setDelete] = React.useState("");
@@ -35,13 +35,24 @@ export default function ServerSettings({ apps, users, server }) {
     setDelete("");
   };
 
-  const handleRename = async (values) => {
-    console.log(values);
+  const handleRename = async (e) => {
+    try {
+      e.preventDefault();
+      await edit.mutateAsync({ id: server.id, body: { name } });
+      refetch();
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
-  const handleDelete = async (values) => {
-    console.log(values);
-    router.push("/servers");
+  const handleDelete = async (e) => {
+    try {
+      e.preventDefault();
+      await deleteServer.mutateAsync(server.id);
+      router.push("/servers");
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   return (
@@ -59,29 +70,32 @@ export default function ServerSettings({ apps, users, server }) {
           Server Name
         </Typography>
         <Box className={classes.flex}>
-          <TextField
-            variant="outlined"
-            size="small"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={name == server.name}
-            onClick={handleRename}
-          >
-            Rename
-          </Button>
+          <form onSubmit={handleRename} noValidate autoComplete="off">
+            <TextField
+              variant="outlined"
+              size="small"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={name == server.name}
+              type="submit"
+              style={{ marginLeft: 3 }}
+            >
+              Rename
+            </Button>
+          </form>
         </Box>
         <Typography variant="caption" paragraph>
           This does not change the name of your actual server.
         </Typography>
 
         <Detail label="IP Address" value={server.ip} />
-        <Detail label="Apps" value={apps} />
-        <Detail label="System Users" value={users} />
-        <Detail label="Web Server" value={server.webServer} />
+        <Detail label="Apps" value={server.apps || 0} />
+        <Detail label="System Users" value={server.systemUsers || 0} />
+        <Detail label="Web Server" value={server.webServer || "-"} />
       </Section>
 
       <Section name="Delete Server">
@@ -111,26 +125,28 @@ export default function ServerSettings({ apps, users, server }) {
             delete the <b>{server.name}</b> server, apps, and databases.
           </Typography>
         </Alert>
-        <Typography variant="body1">
-          Please type <b>{server.name}</b> to confirm.
-        </Typography>
-        <TextField
-          variant="outlined"
-          margin="dense"
-          fullWidth
-          className={classes.input}
-          value={deleteName}
-          onChange={(e) => setDelete(e.target.value)}
-        />
-        <Button
-          variant="outlined"
-          className={classes.btn}
-          fullWidth
-          disabled={deleteName != server.name}
-          onClick={handleDelete}
-        >
-          I understand the consequences, delete server
-        </Button>
+        <form onSubmit={handleDelete} noValidate>
+          <Typography variant="body1">
+            Please type <b>{server.name}</b> to confirm.
+          </Typography>
+          <TextField
+            variant="outlined"
+            margin="dense"
+            fullWidth
+            className={classes.input}
+            value={deleteName}
+            onChange={(e) => setDelete(e.target.value)}
+          />
+          <Button
+            variant="outlined"
+            className={classes.btn}
+            fullWidth
+            disabled={deleteName != server.name || deleteServer.isLoading}
+            type="submit"
+          >
+            I understand the consequences, delete server
+          </Button>
+        </form>
       </Modal>
     </Container>
   );

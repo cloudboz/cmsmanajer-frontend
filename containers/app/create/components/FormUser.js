@@ -1,5 +1,10 @@
 import React from "react";
-import { makeStyles, FormControlLabel } from "@material-ui/core";
+import {
+  makeStyles,
+  FormControlLabel,
+  Typography,
+  Checkbox,
+} from "@material-ui/core";
 
 import Input from "components/Input";
 import Select from "components/Select";
@@ -19,11 +24,19 @@ export default function FormUser({
   handleChange,
   classes,
   setFieldValue,
+  createUser,
+  setCreateUser,
 }) {
-  const [createUser, setCreateUser] = React.useState(values.createUser);
-
   const handleCreateUser = async () => {
     setCreateUser(!createUser);
+  };
+
+  const defaultProps = {
+    handleBlur,
+    handleChange,
+    values,
+    errors,
+    touched,
   };
 
   const emptyValues = {
@@ -42,7 +55,7 @@ export default function FormUser({
       await setFieldValue("systemUser", {
         id: options[0].id,
         username: options[0].username,
-        password: "null",
+        password: "",
       });
       setFieldValue("createUser", createUser);
     }
@@ -50,7 +63,7 @@ export default function FormUser({
 
   return (
     <>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={
           <Switch
             checked={createUser}
@@ -59,24 +72,21 @@ export default function FormUser({
           />
         }
         label="Create new system user"
-      />
+      /> */}
       {createUser ? (
         <>
-          {data.map((input, i) => (
-            <Input
-              name={input.name}
-              label={input.label}
-              className={classes.form}
-              placeholder={input.placeholder}
-              values={values}
-              errors={errors}
-              touched={touched}
-              handleBlur={handleBlur}
-              handleChange={handleChange}
-              required
-              key={i}
-            />
-          ))}
+          <Input
+            name="systemUser.username"
+            label="Username"
+            placeholder="e.g. ubuntu"
+            {...defaultProps}
+          />
+          <Input
+            name="systemUser.password"
+            label="Password"
+            placeholder="*********"
+            {...defaultProps}
+          />
         </>
       ) : (
         <Select
@@ -92,10 +102,11 @@ export default function FormUser({
           handleBlur={handleBlur}
           handleChange={(e) => {
             const { id, username } = e.target.value;
+
             setFieldValue("systemUser", {
               id,
               username,
-              password: "null",
+              password: "",
             });
           }}
         />

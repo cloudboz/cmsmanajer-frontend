@@ -16,22 +16,26 @@ import ServerUsers from "./users";
 import ServerSettings from "./settings";
 
 import useServer from "hooks/server";
+import { Loader } from "components/Loader";
 
 export default function DetailServer({ id }) {
   const classes = useStyles();
   const router = useRouter();
   const { getServerByID, getAppsByServer, getSysUsersByServer } = useServer();
 
-  const { data: server, isLoading: isLoadingServer } = getServerByID(id);
+  const {
+    data: server,
+    isLoading: isLoadingServer,
+    refetch,
+  } = getServerByID(id);
   const { data: apps, isLoading: isLoadingApps } = getAppsByServer(id);
-  const { data: users, isLoading: isLoadingUsers } = getSysUsersByServer(id);
 
   const tabsItem = ["Apps", "Users", "Settings"];
 
   return (
     <Layout>
-      {isLoadingServer || isLoadingApps || isLoadingUsers ? (
-        <h1>Loading</h1>
+      {isLoadingServer || isLoadingApps ? (
+        <Loader />
       ) : (
         <>
           <Grid container style={{ justifyContent: "space-between" }}>
@@ -55,12 +59,8 @@ export default function DetailServer({ id }) {
 
           <Tabs items={tabsItem}>
             <ServerApps apps={apps} server={server} />
-            <ServerUsers users={users} server={server} />
-            <ServerSettings
-              server={server}
-              apps={apps.length}
-              users={users.length}
-            />
+            <ServerUsers server={server} />
+            <ServerSettings server={server} refetch={refetch} />
           </Tabs>
         </>
       )}

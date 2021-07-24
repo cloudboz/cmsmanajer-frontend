@@ -70,15 +70,11 @@ export default function LoginForm({ onSubmit, isLoading }) {
         </Link>
       </Typography>
 
-      <form
-        className={classes.root}
-        noValidate
-        onSubmit={handleSubmit}
-        autoComplete="off"
-      >
+      <form className={classes.root} noValidate onSubmit={handleSubmit}>
         <Input
           name="email"
           placeholder="e.g. mail@cmsmanajer.com"
+          autoFocus
           {...defaultProps}
         />
 
