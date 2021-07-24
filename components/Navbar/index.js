@@ -1,5 +1,5 @@
 import React from "react";
-import { deepOrange, red } from "@material-ui/core/colors";
+import { grey, red } from "@material-ui/core/colors";
 import Person from "@material-ui/icons/Person";
 import PersonOutline from "@material-ui/icons/PersonOutline";
 import ExitToApp from "@material-ui/icons/ExitToApp";
@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     width: 45,
     margin: 0,
-    color: theme.palette.getContrastText(deepOrange[500]),
-    backgroundColor: deepOrange[500],
+    color: theme.palette.getContrastText(grey[300]),
+    backgroundColor: grey[300],
   },
 }));
 
@@ -114,12 +114,12 @@ export default function Navbar({ value: initValue }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>
+                {/* <MenuItem onClick={handleClose}>
                   <ListItemIcon>
                     <PersonOutline />
                   </ListItemIcon>
                   <ListItemText primary="Profile" />
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon>
                     <ExitToApp style={{ color: red[500] }} />
