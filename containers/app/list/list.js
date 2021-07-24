@@ -27,14 +27,14 @@ export default function ListApp({ apps, refetch }) {
         console.log(data);
       });
 
-      socket.on("done" + user.id, () => {
+      socket.on("done" + user.id, (data) => {
         refetch();
-        notif.success("App deleted");
+        notif.success(data);
       });
 
       socket.on("error" + user.id, (data) => {
         refetch();
-        notif.error("Failed to delete app. " + data);
+        notif.error(data);
       });
     }
   }, [socket]);
@@ -54,7 +54,16 @@ export default function ListApp({ apps, refetch }) {
       <ListHeader items={headers} width={width} />
       {apps?.map(
         (
-          { id, name, domain, type, server, systemUser, databases, status },
+          {
+            id,
+            name,
+            domain,
+            type,
+            server,
+            systemUser,
+            totalDatabases,
+            status,
+          },
           i
         ) => (
           <ListItem
@@ -90,7 +99,7 @@ export default function ListApp({ apps, refetch }) {
                   <Typography>{systemUser?.username}</Typography>
                 </Box>
                 <Box style={{ width: width[5] }}>
-                  <Typography>{databases}</Typography>
+                  <Typography>{totalDatabases}</Typography>
                 </Box>
               </>
             }

@@ -313,7 +313,7 @@ const steps = {
   apache: [
     {
       name: "Installing app",
-      parts: 1,
+      parts: 2,
     },
     {
       name: "Finish",
@@ -323,7 +323,7 @@ const steps = {
   nginx: [
     {
       name: "Installing app",
-      parts: 1,
+      parts: 2,
     },
     {
       name: "Finish",

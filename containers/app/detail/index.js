@@ -33,7 +33,7 @@ export default function DetailApp({ id }) {
   });
 
   const tabsItem = ["Databases", "Settings"];
-  const disableDb = ["docker", "mongodb"];
+  const disableDb = ["docker", "mongodb", "nginx", "apache", "mysql"];
 
   return (
     <Layout>
