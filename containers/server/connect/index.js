@@ -37,6 +37,7 @@ const requirements = [
   "Only clean servers (no Nginx, Apache, or MySQL installed) can be connected to CMS Manajer.",
   "Installed python2.7 or python3.",
   "Minimum of RAM 256MB.",
+  "Login with root user",
 ];
 
 const initialValues = {
@@ -258,7 +259,7 @@ export default function ConnectServer() {
                   {...defaultProps}
                 />
 
-                <FormControlLabel
+                {/* <FormControlLabel
                   label={
                     <Typography variant="subtitle1">
                       Add multiple server
@@ -271,7 +272,7 @@ export default function ConnectServer() {
                       color="secondary"
                     />
                   }
-                />
+                /> */}
                 {multiple && (
                   <Alert severity="warning">
                     <Typography variant="subtitle2">

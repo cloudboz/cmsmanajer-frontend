@@ -63,7 +63,7 @@ export default function FormUser({
 
   return (
     <>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={
           <Switch
             checked={createUser}
@@ -72,7 +72,7 @@ export default function FormUser({
           />
         }
         label="Create new system user"
-      />
+      /> */}
       {createUser ? (
         <>
           <Input
