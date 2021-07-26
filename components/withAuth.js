@@ -23,6 +23,9 @@ export default function withAuth(Component) {
           } = await API.get("/profile");
           setUser(user);
           setIsLoggedIn(true);
+          if (!user.verified) {
+            Router.replace("/verify");
+          }
           setInitializing(false);
         } catch (error) {
           Router.replace("/login");
